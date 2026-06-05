@@ -235,6 +235,20 @@ class InfographicAgent:
                 "col_w":        col_w,
                 "svg_h":        svg_h,
             }
+        elif template_type == "cheat_sheet_v2":
+            sections = data.get("sections") or []
+            cleaned = []
+            for s in sections:
+                cleaned.append({
+                    "name":  s.get("name", ""),
+                    "items": s.get("items") or [],
+                })
+            extra = {
+                "sections":    cleaned,
+                "footer_note": data.get("footer_note", ""),
+            }
+            # Remove keys from data that we inject explicitly to avoid duplicates
+            data = {k: v for k, v in data.items() if k not in ("sections", "footer_note")}
 
         template = self._env.get_template(f"{template_type}/template.html")
         return template.render(

@@ -1,0 +1,21 @@
+{
+  "template": "cheat_sheet_v2",
+  "description": "Multi-card grid cheat sheet — one image, N section cards, each with a colored header and items list. Best for API references, language syntax, command references, and learning roadmaps.",
+  "fields": {
+    "hero":     { "type": "string", "description": "Main title 2-4 words ALL CAPS — the subject (JAVA STREAMS, GIT COMMANDS, PYTHON TIPS)", "required": true },
+    "subtitle": { "type": "string", "description": "One line — what this covers and the target audience", "required": true },
+    "sections": {
+      "type": "array", "min": 4, "max": 12, "required": true,
+      "description": "Section cards arranged in a 3-column grid. 6-9 sections fills the image well. Each section is one card.",
+      "items": {
+        "name":  "string — section header label (Stream Creation, Intermediate Ops, Terminal Ops)",
+        "items": {
+          "type": "array", "min": 3, "max": 6,
+          "description": "Items inside this card. Each item: name (the method/term/command) + desc (one short line).",
+          "items": { "name": "string", "desc": "string" }
+        }
+      }
+    },
+    "footer_note": { "type": "string", "description": "Short bottom-line insight or version note (Java 8+ — use streams for clean data pipelines)", "required": true }
+  }
+}

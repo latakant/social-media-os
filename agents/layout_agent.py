@@ -13,8 +13,8 @@ from agents.template_registry import load_schema, schema_as_prompt
 _PATTERN_TEMPLATE: dict[str, str] = {
     "lifecycle":    "lifecycle_card",
     "process_flow": "lifecycle_card",
-    "cheatsheet":   "cheat_sheet_card",
-    "hierarchy":    "cheat_sheet_card",
+    "cheatsheet":   "cheat_sheet_v2",
+    "hierarchy":    "cheat_sheet_v2",
     "comparison":   "comparison_card",
     "architecture": "architecture_card_v2",
     "concept":      "concept_card",
