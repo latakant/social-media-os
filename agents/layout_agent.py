@@ -7,7 +7,7 @@ Jinja2 is left as a pure renderer — no intelligence in templates.
 
 import json
 from groq import Groq
-from agents.template_registry import schema_as_prompt
+from agents.template_registry import load_schema, schema_as_prompt
 
 
 _PATTERN_TEMPLATE: dict[str, str] = {
@@ -76,7 +76,8 @@ class LayoutAgent:
         return _FALLBACK_CONTENT_TYPE_TEMPLATE.get(content_type, "concept_card")
 
     def _fill_template(self, graph: dict, template_name: str) -> dict:
-        schema_desc = schema_as_prompt(template_name)
+        # Pass the full raw schema JSON so the LLM sees every nested field
+        schema_desc = json.dumps(load_schema(template_name), indent=2)
         response = self._client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             response_format={"type": "json_object"},

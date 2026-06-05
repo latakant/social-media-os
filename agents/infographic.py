@@ -217,19 +217,26 @@ class InfographicAgent:
 
     def _screenshot(self, html: str, label: str = "card", platform: str = "default") -> str:
         w, h = _PLATFORM_DIMENSIONS.get(platform, _PLATFORM_DIMENSIONS["default"])
-        path = self._output_dir / f"{label}_{int(time.time())}.png"
-        with sync_playwright() as p:
-            browser = p.chromium.launch()
-            page = browser.new_page(
-                viewport={"width": w, "height": h},
-                device_scale_factor=3,
-            )
-            page.set_content(html, wait_until="networkidle")
-            page.wait_for_timeout(2000)
-            page.screenshot(
-                path=str(path),
-                clip={"x": 0, "y": 0, "width": w, "height": h},
-                type="png",
-            )
-            browser.close()
-        return str(path)
+        out_path = self._output_dir / f"{label}_{int(time.time())}.png"
+        # Write to a real file so file:// relative imports in _base.css resolve correctly.
+        # page.set_content() has no base_url — page.goto(file://) does.
+        tmp = self._output_dir / f"_tmp_{label}.html"
+        tmp.write_text(html, encoding="utf-8")
+        try:
+            with sync_playwright() as p:
+                browser = p.chromium.launch()
+                page = browser.new_page(
+                    viewport={"width": w, "height": h},
+                    device_scale_factor=3,
+                )
+                page.goto(tmp.resolve().as_uri(), wait_until="networkidle")
+                page.wait_for_timeout(2000)
+                page.screenshot(
+                    path=str(out_path),
+                    clip={"x": 0, "y": 0, "width": w, "height": h},
+                    type="png",
+                )
+                browser.close()
+        finally:
+            tmp.unlink(missing_ok=True)
+        return str(out_path)
