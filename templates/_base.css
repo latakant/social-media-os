@@ -24,6 +24,33 @@ body.bg-grid {
   background-position: -1px -1px;
 }
 
+/* Light theme overrides — activated by body.bg-light */
+body.bg-light .grad,
+body.bg-light .hero,
+body.bg-light .concept,
+body.bg-light .system-name,
+body.bg-light .title,
+body.bg-light .headline {
+  background: none !important;
+  -webkit-text-fill-color: var(--text) !important;
+  color: var(--text) !important;
+}
+body.bg-light .brand { color: var(--text-dim) !important; }
+body.bg-light .brand em { color: var(--primary) !important; }
+body.bg-light .tag { color: var(--primary) !important; }
+body.bg-light .bg-art { display: none; }
+body.bg-light .top-bar {
+  background: linear-gradient(90deg, var(--primary), var(--primary-dark), #E0EDFB) !important;
+}
+body.bg-light .accent-bar {
+  background: linear-gradient(90deg, var(--primary), transparent) !important;
+}
+body.bg-light .footer,
+body.bg-light .bottom {
+  background: #EFF6FF !important;
+  border-top: 1px solid var(--border) !important;
+}
+
 /* ── Shared components ──────────────────────────────────── */
 
 .tag {

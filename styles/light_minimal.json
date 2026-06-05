@@ -1,0 +1,36 @@
+{
+  "name": "light_minimal",
+  "description": "White background, LinkedIn blue accent, dark text — clean professional light theme",
+  "colors": {
+    "--bg":            "#FFFFFF",
+    "--bg-card":       "#F8FAFC",
+    "--bg-card-2":     "#EFF6FF",
+    "--primary":       "#0A66C2",
+    "--primary-dark":  "#0050A0",
+    "--success":       "#16A34A",
+    "--danger":        "#DC2626",
+    "--text":          "#0F172A",
+    "--text-2":        "#1E293B",
+    "--text-muted":    "#334155",
+    "--text-subtle":   "#475569",
+    "--text-dim":      "#64748B",
+    "--text-faint":    "#94A3B8",
+    "--arrow":         "#CBD5E1",
+    "--border":        "rgba(0,0,0,0.09)",
+    "--border-accent": "rgba(10,102,194,0.25)"
+  },
+  "typography": {
+    "--t-hero":      "84px",
+    "--t-section":   "42px",
+    "--t-item":      "22px",
+    "--t-detail":    "14px",
+    "--font-family": "'Inter', -apple-system, sans-serif"
+  },
+  "spacing": {
+    "--card-radius": "12px"
+  },
+  "visual": {
+    "bg_class":             "bg-light",
+    "illustration_opacity": "0.03"
+  }
+}

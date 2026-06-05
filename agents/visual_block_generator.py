@@ -101,11 +101,15 @@ class VisualBlockGenerator:
             )
 
         if block_type == "why":
-            why_points = (
-                takeaways[:4]
-                or [n["detail"] for n in nodes[:4] if n.get("detail")]
-                or [n["label"] for n in nodes[:4]]
-            )
+            # Use takeaways, pad with node details if fewer than 3
+            base_points = list(takeaways[:4])
+            if len(base_points) < 3:
+                extra = [
+                    n["detail"] for n in nodes
+                    if n.get("detail") and n["detail"] not in base_points
+                ]
+                base_points.extend(extra[:4 - len(base_points)])
+            why_points = base_points or [n["label"] for n in nodes[:4]]
             return VisualBlock(
                 title=f"Why {_title_safe(hero)} matters",
                 points=why_points,
