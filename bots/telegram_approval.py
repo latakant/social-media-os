@@ -32,6 +32,7 @@ class ApprovalBot:
         self._waiting_for_suggestion: bool = False
         self._event = asyncio.Event()
         self._post_id: str | None = None
+        self._platform: str = "linkedin"
         self._generated: str | None = None
         init_db()
 
@@ -60,7 +61,7 @@ class ApprovalBot:
         if action == "approve":
             record = PostRecord(
                 post_id=post_id,
-                platform="linkedin",
+                platform=self._platform,
                 generated_content=self._generated,
                 approved_content=self._generated,
                 posted_at=datetime.now(timezone.utc),
@@ -111,10 +112,11 @@ class ApprovalBot:
         self._event.set()
 
     async def send_for_approval(
-        self, post_text: str, image_path: str | None = None
+        self, post_text: str, image_path: str | None = None, platform: str = "linkedin"
     ) -> tuple[str, str, str | None]:
         """Send image + post to Telegram. Returns (decision, post_id, suggestion)."""
         self._post_id = str(uuid.uuid4())[:8]
+        self._platform = platform
         self._generated = post_text
         self._decision = None
         self._suggestion = None

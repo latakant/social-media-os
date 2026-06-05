@@ -10,3 +10,8 @@ class ContentContract:
     key_points: list[str]               # 3-6 bullet points
     call_to_action: str                 # closing question or action
     supporting_details: dict = field(default_factory=dict)  # template-specific extra data
+    # Orchestrator-level fields
+    audience: str = "developers"
+    objective: str = "thought_leadership"
+    platforms: list[str] = field(default_factory=list)
+    knowledge_context: list = field(default_factory=list)
