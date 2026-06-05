@@ -2,89 +2,70 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<style>:root { --canvas-w:{{ canvas_w }}px; --canvas-h:{{ canvas_h }}px; }</style>
+<link rel="stylesheet" href="{{ base_css_url }}">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-* { margin:0; padding:0; box-sizing:border-box; }
-
-body {
-  width:1200px; height:1200px; overflow:hidden;
-  background:#0F172A;
-  font-family:'Inter',-apple-system,sans-serif;
-  color:#F8FAFC;
-  display:flex; flex-direction:column;
-  -webkit-font-smoothing:antialiased;
-  position:relative;
-}
-
-.bg-art { position:fixed; inset:0; z-index:0; overflow:hidden; }
-.bg-art img {
-  width:100%; height:100%; object-fit:cover;
-  opacity:0.06; filter:blur(10px);
-}
-
-body::before {
+body { display:flex; flex-direction:column; position:relative; }
+body.left-bar::before {
   content:''; position:fixed; left:0; top:0; bottom:0; width:5px;
-  background:linear-gradient(180deg,#38BDF8,#0284C7); z-index:2;
+  background:linear-gradient(180deg, var(--primary), var(--primary-dark)); z-index:2;
 }
+
+.bg-art img { opacity:0.06; filter:blur(10px); }
+.bg-art::after { background:none; }
 
 .header {
   position:relative; z-index:1;
-  padding:56px 80px 0 88px;
+  padding:56px var(--sp-xl) 0 88px;
   display:flex; justify-content:space-between; align-items:flex-start;
-}
-.tag {
-  font-size:12px; font-weight:700; letter-spacing:3px;
-  color:#38BDF8; text-transform:uppercase; margin-bottom:16px;
 }
 .topic {
   font-size:60px; font-weight:900; line-height:1.0;
-  background:linear-gradient(135deg,#F8FAFC 0%,#38BDF8 100%);
+  background:linear-gradient(135deg, var(--text) 0%, var(--primary) 100%);
   -webkit-background-clip:text; -webkit-text-fill-color:transparent;
   max-width:680px;
 }
-.project-sub { font-size:18px; color:#475569; margin-top:12px; font-weight:500; }
-.brand { font-size:13px; color:#334155; font-weight:600; text-align:right; }
-.brand em { color:#38BDF8; font-style:normal; }
+.project-sub { font-size:18px; color:var(--text-dim); margin-top:12px; font-weight:500; }
 
-.accent-bar {
+.accent-bar-offset {
   position:relative; z-index:1;
-  margin:32px 80px 0 88px;
+  margin:32px var(--sp-xl) 0 88px;
   width:60px; height:4px;
-  background:linear-gradient(90deg,#38BDF8,transparent); border-radius:2px;
+  background:linear-gradient(90deg, var(--primary), transparent); border-radius:2px;
 }
 
 .lists {
   position:relative; z-index:1;
-  flex:1; padding:36px 80px 36px 88px;
+  flex:1; padding:36px var(--sp-xl) 36px 88px;
   display:grid; grid-template-columns:1fr 1fr; gap:52px;
   align-content:start;
 }
 .section-label {
   font-size:12px; font-weight:700; letter-spacing:2px;
   text-transform:uppercase; padding-bottom:16px;
-  border-bottom:1px solid rgba(255,255,255,0.07);
+  border-bottom:1px solid var(--border);
   margin-bottom:24px;
 }
-.section-label.built { color:#34D399; }
-.section-label.next  { color:#38BDF8; }
+.section-label.built { color:var(--success); }
+.section-label.next  { color:var(--primary); }
 
 .item { display:flex; align-items:flex-start; gap:14px; margin-bottom:24px; }
 .item-check { font-size:16px; flex-shrink:0; margin-top:3px; font-weight:700; }
-.item-check.built { color:#34D399; }
-.item-check.next  { color:#38BDF8; }
-.item-text { font-size:22px; font-weight:600; color:#F8FAFC; line-height:1.3; }
-.item-sub  { font-size:14px; color:#64748B; margin-top:4px; line-height:1.4; }
+.item-check.built { color:var(--success); }
+.item-check.next  { color:var(--primary); }
+.item-text { font-size:22px; font-weight:600; color:var(--text); line-height:1.3; }
+.item-sub  { font-size:14px; color:var(--text-subtle); margin-top:4px; line-height:1.4; }
 
 .footer {
   position:relative; z-index:1;
-  padding:20px 80px 48px 88px;
+  padding:20px var(--sp-xl) 48px 88px;
   border-top:1px solid rgba(255,255,255,0.05);
   display:flex; justify-content:space-between; align-items:center;
 }
-.insight { font-size:15px; color:#334155; font-style:italic; }
+.insight { font-size:15px; color:var(--text-faint); font-style:italic; }
 </style>
 </head>
-<body>
+<body class="left-bar">
   {% if illustration %}
   <div class="bg-art"><img src="{{ illustration }}" /></div>
   {% endif %}
@@ -98,7 +79,7 @@ body::before {
     <div class="brand">Building in Public<br><em>AI Agents</em></div>
   </div>
 
-  <div class="accent-bar"></div>
+  <div class="accent-bar-offset"></div>
 
   <div class="lists">
     <div class="section">

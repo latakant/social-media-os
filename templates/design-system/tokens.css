@@ -1,0 +1,55 @@
+/* Design Tokens — single source of truth for all templates.
+   Never edit hex values inside templates. Change here, propagate everywhere. */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  /* Canvas — overridden per platform by Jinja2 injection */
+  --canvas-w: 1200px;
+  --canvas-h: 1200px;
+
+  /* Backgrounds */
+  --bg:        #0F172A;
+  --bg-card:   #1E293B;
+  --bg-card-2: #263348;
+
+  /* Brand */
+  --primary:      #38BDF8;
+  --primary-dark: #0284C7;
+  --success:      #34D399;
+  --danger:       #F87171;
+
+  /* Text hierarchy */
+  --text:        #F8FAFC;
+  --text-2:      #CBD5E1;
+  --text-muted:  #94A3B8;
+  --text-subtle: #64748B;
+  --text-dim:    #475569;
+  --text-faint:  #334155;
+  --arrow:       #1E3A5F;
+
+  /* Borders */
+  --border:        rgba(255,255,255,0.08);
+  --border-accent: rgba(56,189,248,0.25);
+
+  /* Shadows */
+  --shadow:    0 8px 30px rgba(0,0,0,0.35);
+  --shadow-sm: 0 4px 16px rgba(0,0,0,0.25);
+
+  /* Type scale */
+  --t-xs:  13px;
+  --t-sm:  16px;
+  --t-md:  22px;
+  --t-lg:  36px;
+  --t-xl:  48px;
+  --t-2xl: 64px;
+  --t-3xl: 76px;
+  --t-4xl: 88px;
+
+  /* Spacing */
+  --sp-xs: 16px;
+  --sp-sm: 24px;
+  --sp-md: 40px;
+  --sp-lg: 60px;
+  --sp-xl: 80px;
+}

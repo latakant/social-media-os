@@ -103,7 +103,7 @@ class Orchestrator:
         loop = asyncio.get_event_loop()
         with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
             image_result = await loop.run_in_executor(
-                pool, self._infograph.render_direct, template_name, card_data
+                pool, self._infograph.render_direct, template_name, card_data, primary_platform
             )
 
         image_path: str | None = None

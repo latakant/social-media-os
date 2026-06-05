@@ -8,7 +8,7 @@
       "type": "array",
       "items": { "icon": "string", "name": "string", "role": "string", "tags": "array" },
       "min": 3, "max": 5,
-      "description": "Pipeline components in order. icon is emoji. tags are short labels.",
+      "description": "Pipeline components in order. icon must be one of: brain, search, pencil, check, send, chart, database, api, agent, flow, memory, user. tags are short labels.",
       "required": true
     },
     "footer_insight": { "type": "string", "description": "Single most important architectural insight", "required": true }

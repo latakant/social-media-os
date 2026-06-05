@@ -1,48 +1,13 @@
-/*
-  DESIGN SYSTEM — Social Intel Brand
-  Never let LLM modify this. Only fill data through Jinja2.
-*/
+/* Base styles — import this in every template via {{ base_css_url }}.
+   Token values live in design-system/tokens.css. */
 
-:root {
-  --bg:           #0F172A;
-  --bg-card:      #1E293B;
-  --bg-card-2:    #263348;
-  --primary:      #38BDF8;
-  --primary-dark: #0284C7;
-  --text:         #F8FAFC;
-  --text-2:       #CBD5E1;
-  --text-muted:   #94A3B8;
-  --text-dim:     #475569;
-  --border:       rgba(255,255,255,0.08);
-  --border-accent: #38BDF8;
-  --shadow:       0 8px 30px rgba(0,0,0,0.35);
-  --shadow-sm:    0 4px 16px rgba(0,0,0,0.25);
+@import url('./design-system/tokens.css');
 
-  /* Typography scale */
-  --t-xs:   14px;
-  --t-sm:   18px;
-  --t-base: 22px;
-  --t-md:   28px;
-  --t-lg:   36px;
-  --t-xl:   48px;
-  --t-2xl:  64px;
-  --t-3xl:  80px;
-
-  /* Spacing */
-  --sp-xs:  16px;
-  --sp-sm:  24px;
-  --sp-md:  40px;
-  --sp-lg:  60px;
-  --sp-xl:  80px;
-}
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin:0; padding:0; box-sizing:border-box; }
 
 body {
-  width: 1200px;
-  height: 1200px;
+  width: var(--canvas-w);
+  height: var(--canvas-h);
   background: var(--bg);
   font-family: 'Inter', -apple-system, sans-serif;
   color: var(--text);
@@ -50,20 +15,8 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Reusable card component */
-.card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  box-shadow: var(--shadow);
-  padding: var(--sp-sm) var(--sp-md);
-}
+/* ── Shared components ──────────────────────────────────── */
 
-.card-accent {
-  border-left: 3px solid var(--border-accent);
-}
-
-/* Tag label */
 .tag {
   font-size: var(--t-xs);
   font-weight: 700;
@@ -72,16 +25,26 @@ body {
   text-transform: uppercase;
 }
 
-/* Brand footer */
 .brand {
   font-size: var(--t-xs);
-  color: var(--text-dim);
+  color: var(--text-faint);
   font-weight: 600;
   letter-spacing: 0.5px;
 }
 .brand em { color: var(--primary); font-style: normal; }
 
-/* Gradient text */
+.accent-bar {
+  width: 48px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), transparent);
+  border-radius: 2px;
+}
+
+.top-bar {
+  height: 5px;
+  background: linear-gradient(90deg, var(--primary), var(--primary-dark), var(--bg));
+}
+
 .grad {
   background: linear-gradient(135deg, var(--text) 0%, var(--primary) 100%);
   -webkit-background-clip: text;
@@ -89,9 +52,33 @@ body {
   background-clip: text;
 }
 
-/* Accent bar */
-.accent-bar {
-  width: 48px; height: 4px;
-  background: linear-gradient(90deg, var(--primary), transparent);
-  border-radius: 2px;
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: var(--sp-sm) var(--sp-md);
+}
+
+.card-accent { border-left: 3px solid var(--primary); }
+
+/* ── Left accent bar (build/lesson cards) ───────────────── */
+.left-bar::before {
+  content: '';
+  position: fixed; left: 0; top: 0; bottom: 0; width: 5px;
+  background: linear-gradient(180deg, var(--primary), var(--primary-dark));
+  z-index: 2;
+}
+
+/* ── Background illustration ────────────────────────────── */
+.bg-art { position: fixed; inset: 0; z-index: 0; overflow: hidden; }
+.bg-art img {
+  width: 100%; height: 100%; object-fit: cover;
+  opacity: 0.07;
+  filter: blur(8px) saturate(1.5);
+}
+.bg-art::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(160deg, var(--bg) 40%, transparent);
 }

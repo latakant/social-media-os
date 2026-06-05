@@ -60,11 +60,12 @@ For architecture_card:
   "system_name": "SYSTEM NAME",
   "subtitle": "One line describing what this system does",
   "components": [
-    {{"icon": "emoji", "name": "Component", "role": "what it does", "tags": ["tag1", "tag2"]}},
-    {{"icon": "emoji", "name": "Component", "role": "what it does", "tags": ["tag1"]}},
-    {{"icon": "emoji", "name": "Component", "role": "what it does", "tags": ["tag1", "tag2"]}},
-    {{"icon": "emoji", "name": "Component", "role": "what it does", "tags": ["tag1"]}}
+    {{"icon": "brain", "name": "Component", "role": "what it does", "tags": ["tag1", "tag2"]}},
+    {{"icon": "search", "name": "Component", "role": "what it does", "tags": ["tag1"]}},
+    {{"icon": "agent", "name": "Component", "role": "what it does", "tags": ["tag1", "tag2"]}},
+    {{"icon": "send", "name": "Component", "role": "what it does", "tags": ["tag1"]}}
   ],
+  "_icon_note": "icon must be one of: brain search pencil check send chart database api agent flow memory user",
   "footer_insight": "One key architectural insight from the post"
 }}
 
@@ -110,6 +111,14 @@ For comparison_card:
 }}"""
 
 
+_PLATFORM_DIMENSIONS: dict[str, tuple[int, int]] = {
+    "linkedin":           (1200, 1200),
+    "instagram":          (1080, 1080),
+    "instagram_portrait": (1080, 1350),
+    "default":            (1200, 1200),
+}
+
+
 class InfographicAgent:
 
     def __init__(
@@ -118,19 +127,19 @@ class InfographicAgent:
         output_dir: str = "data/images",
     ) -> None:
         self._groq = Groq()
-        # Load from subdirectories: templates/build_card/template.html
-        self._env = Environment(loader=FileSystemLoader(templates_dir))
+        self._templates_dir = Path(templates_dir).resolve()
+        self._env = Environment(loader=FileSystemLoader(str(self._templates_dir)))
         self._output_dir = Path(output_dir)
         self._output_dir.mkdir(parents=True, exist_ok=True)
 
-    def generate(self, post_text: str) -> str:
+    def generate(self, post_text: str, platform: str = "default") -> str:
         """Legacy: extract structure from post text, then render."""
         data = self._extract_structure(post_text)
-        return self.render_direct(data.get("type", "concept_card"), data)
+        return self.render_direct(data.get("type", "concept_card"), data, platform=platform)
 
-    def render_direct(self, template_type: str, card_data: dict) -> str:
+    def render_direct(self, template_type: str, card_data: dict, platform: str = "default") -> str:
         """New flow: card data already structured, skip extraction."""
-        print(f"  Template: {template_type}")
+        print(f"  Template: {template_type}  Platform: {platform}")
         data = dict(card_data)
         data["type"] = template_type
 
@@ -142,8 +151,8 @@ class InfographicAgent:
         if illustration:
             data["illustration"] = illustration
 
-        html = self._render(template_type, data)
-        return self._screenshot(html, template_type)
+        html = self._render(template_type, data, platform)
+        return self._screenshot(html, template_type, platform)
 
     def _generate_illustration(self, concept: str) -> str | None:
         """Generate illustration, return as base64 data URI or None on failure."""
@@ -200,24 +209,26 @@ class InfographicAgent:
             return [self._strip_markdown(i) for i in obj]
         return obj
 
-    def _render(self, template_type: str, data: dict) -> str:
-        # New path: templates/build_card/template.html
+    def _render(self, template_type: str, data: dict, platform: str = "default") -> str:
+        w, h = _PLATFORM_DIMENSIONS.get(platform, _PLATFORM_DIMENSIONS["default"])
+        base_css_url = (self._templates_dir / "_base.css").as_uri()
         template = self._env.get_template(f"{template_type}/template.html")
-        return template.render(**data)
+        return template.render(base_css_url=base_css_url, canvas_w=w, canvas_h=h, **data)
 
-    def _screenshot(self, html: str, label: str = "card") -> str:
+    def _screenshot(self, html: str, label: str = "card", platform: str = "default") -> str:
+        w, h = _PLATFORM_DIMENSIONS.get(platform, _PLATFORM_DIMENSIONS["default"])
         path = self._output_dir / f"{label}_{int(time.time())}.png"
         with sync_playwright() as p:
             browser = p.chromium.launch()
             page = browser.new_page(
-                viewport={"width": 1200, "height": 1200},
-                device_scale_factor=3,        # renders at 3600×3600 internally
+                viewport={"width": w, "height": h},
+                device_scale_factor=3,
             )
             page.set_content(html, wait_until="networkidle")
-            page.wait_for_timeout(2000)       # allow fonts + illustration to fully load
+            page.wait_for_timeout(2000)
             page.screenshot(
                 path=str(path),
-                clip={"x": 0, "y": 0, "width": 1200, "height": 1200},
+                clip={"x": 0, "y": 0, "width": w, "height": h},
                 type="png",
             )
             browser.close()

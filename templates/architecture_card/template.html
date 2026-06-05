@@ -2,103 +2,65 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<style>:root { --canvas-w:{{ canvas_w }}px; --canvas-h:{{ canvas_h }}px; }</style>
+<link rel="stylesheet" href="{{ base_css_url }}">
+{% from 'design-system/icons.html' import icon %}
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-* { margin:0; padding:0; box-sizing:border-box; }
+body { display:flex; flex-direction:column; position:relative; }
 
-body {
-  width:1200px; height:1200px; overflow:hidden;
-  background:#0F172A;
-  font-family:'Inter',-apple-system,sans-serif;
-  color:#F8FAFC;
-  display:flex; flex-direction:column;
-  -webkit-font-smoothing:antialiased;
-  position:relative;
-}
-
-/* ILLUSTRATION — more visible, less blur */
-.bg-art {
-  position:fixed; inset:0; z-index:0; overflow:hidden;
-}
-.bg-art img {
-  width:100%; height:100%; object-fit:cover;
-  opacity:0.18;
-  filter:blur(4px) saturate(1.8);
-}
+.bg-art img { opacity:0.18; filter:blur(4px) saturate(1.8); }
 .bg-art::after {
-  content:''; position:absolute; inset:0;
   background:
-    linear-gradient(180deg, #0F172Aee 0%, #0F172A99 40%, #0F172Aee 100%),
-    linear-gradient(90deg, #0F172Aff 0%, transparent 50%, #0F172Aff 100%);
+    linear-gradient(180deg, var(--bg) 0%, rgba(15,23,42,0.6) 40%, var(--bg) 100%),
+    linear-gradient(90deg, var(--bg) 0%, transparent 50%, var(--bg) 100%);
 }
 
-.top-bar {
-  height:5px;
-  background:linear-gradient(90deg,#38BDF8,#0284C7,#0F172A);
-  position:relative; z-index:1;
-}
-
-/* HEADER */
 .header {
   position:relative; z-index:1;
-  padding:48px 80px 32px;
+  padding:48px var(--sp-xl) 32px;
   display:flex; justify-content:space-between; align-items:flex-start;
-}
-.tag {
-  font-size:13px; font-weight:700; letter-spacing:3px;
-  color:#38BDF8; text-transform:uppercase; margin-bottom:14px;
 }
 .system-name {
   font-size:68px; font-weight:900; line-height:0.95;
-  background:linear-gradient(135deg,#F8FAFC 0%,#38BDF8 100%);
+  background:linear-gradient(135deg, var(--text) 0%, var(--primary) 100%);
   -webkit-background-clip:text; -webkit-text-fill-color:transparent;
 }
-.subtitle {
-  font-size:17px; color:#64748B; margin-top:14px;
-  max-width:500px; line-height:1.5;
-}
-.brand { font-size:13px; color:#334155; font-weight:600; }
-.brand em { color:#38BDF8; font-style:normal; }
+.subtitle { font-size:17px; color:var(--text-subtle); margin-top:14px; max-width:500px; line-height:1.5; }
 
-/* FLOW */
 .flow {
   position:relative; z-index:1;
-  padding:8px 80px 0;
-  display:flex; flex-direction:column; gap:0;
+  padding:8px var(--sp-xl) 0;
+  display:flex; flex-direction:column;
 }
 .comp-row { display:flex; flex-direction:column; }
 .comp-card {
   background:rgba(30,41,59,0.85);
-  border:1px solid rgba(255,255,255,0.08);
-  border-left:3px solid #38BDF8;
+  border:1px solid var(--border);
+  border-left:3px solid var(--primary);
   border-radius:14px;
   padding:22px 28px;
-  box-shadow:0 8px 30px rgba(0,0,0,0.4);
+  box-shadow:var(--shadow);
   display:flex; align-items:center; gap:24px;
   backdrop-filter:blur(4px);
 }
-.comp-icon { font-size:48px; flex-shrink:0; }  /* bigger emojis */
+.comp-icon { width:48px; height:48px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
 .comp-body { flex:1; }
-.comp-name { font-size:26px; font-weight:800; color:#F8FAFC; }
-.comp-role { font-size:15px; color:#64748B; margin-top:3px; }
+.comp-name { font-size:26px; font-weight:800; color:var(--text); }
+.comp-role { font-size:15px; color:var(--text-subtle); margin-top:3px; }
 .comp-tags { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
 .comp-tag {
   background:rgba(38,51,72,0.9);
-  border:1px solid rgba(56,189,248,0.25);
+  border:1px solid var(--border-accent);
   border-radius:6px; padding:3px 12px;
-  font-size:12px; color:#38BDF8; font-weight:600;
+  font-size:12px; color:var(--primary); font-weight:600;
 }
-.arrow-down {
-  font-size:20px; color:#1E3A5F;
-  padding:7px 0 7px 28px;
-}
+.arrow-down { font-size:20px; color:var(--arrow); padding:7px 0 7px 28px; }
 
-/* INSIGHT BLOCK — Option B */
 .insight-block {
   position:relative; z-index:1;
-  margin:20px 80px 0;
+  margin:20px var(--sp-xl) 0;
   background:rgba(30,41,59,0.6);
-  border:1px solid rgba(56,189,248,0.15);
+  border:1px solid var(--border-accent);
   border-radius:16px;
   padding:24px 36px;
   backdrop-filter:blur(4px);
@@ -107,35 +69,22 @@ body {
   display:flex; align-items:center; justify-content:center;
   gap:0; margin-bottom:14px;
 }
-.loop-step {
-  display:flex; align-items:center; gap:0;
-}
 .loop-label {
-  font-size:15px; font-weight:700; color:#94A3B8;
+  font-size:15px; font-weight:700; color:var(--text-muted);
   padding:6px 16px;
   background:rgba(56,189,248,0.08);
-  border:1px solid rgba(56,189,248,0.15);
+  border:1px solid var(--border-accent);
   border-radius:8px;
 }
-.loop-label.highlight { color:#38BDF8; border-color:rgba(56,189,248,0.4); }
-.loop-arrow {
-  font-size:16px; color:#1E3A5F; padding:0 10px;
-}
-.insight-text {
-  font-size:15px; color:#475569; text-align:center; line-height:1.5;
-}
-.insight-text strong { color:#38BDF8; }
+.loop-label.highlight { color:var(--primary); border-color:rgba(56,189,248,0.4); }
+.loop-arrow { font-size:16px; color:var(--arrow); padding:0 10px; }
+.insight-text { font-size:15px; color:var(--text-dim); text-align:center; line-height:1.5; }
+.insight-text strong { color:var(--primary); }
 
-/* FOOTER */
 .footer {
   position:relative; z-index:1;
-  padding:20px 80px 40px;
+  padding:20px var(--sp-xl) 40px;
   display:flex; align-items:center; justify-content:space-between;
-}
-.accent-bar {
-  width:48px; height:4px;
-  background:linear-gradient(90deg,#38BDF8,transparent);
-  border-radius:2px;
 }
 </style>
 </head>
@@ -159,7 +108,7 @@ body {
     {% for comp in components %}
     <div class="comp-row">
       <div class="comp-card">
-        <div class="comp-icon">{{ comp.icon }}</div>
+        <div class="comp-icon">{{ icon(comp.icon) }}</div>
         <div class="comp-body">
           <div class="comp-name">{{ comp.name }}</div>
           <div class="comp-role">{{ comp.role }}</div>
@@ -175,29 +124,13 @@ body {
     {% endfor %}
   </div>
 
-  <!-- Option B: insight loop block -->
   <div class="insight-block">
     <div class="loop-row">
-      <div class="loop-step">
-        <span class="loop-label">Observe</span>
-        <span class="loop-arrow">→</span>
-      </div>
-      <div class="loop-step">
-        <span class="loop-label highlight">Generate</span>
-        <span class="loop-arrow">→</span>
-      </div>
-      <div class="loop-step">
-        <span class="loop-label">Review</span>
-        <span class="loop-arrow">→</span>
-      </div>
-      <div class="loop-step">
-        <span class="loop-label">Publish</span>
-        <span class="loop-arrow">→</span>
-      </div>
-      <div class="loop-step">
-        <span class="loop-label highlight">Measure</span>
-        <span class="loop-arrow">→</span>
-      </div>
+      <div class="loop-step"><span class="loop-label">Observe</span><span class="loop-arrow">→</span></div>
+      <div class="loop-step"><span class="loop-label highlight">Generate</span><span class="loop-arrow">→</span></div>
+      <div class="loop-step"><span class="loop-label">Review</span><span class="loop-arrow">→</span></div>
+      <div class="loop-step"><span class="loop-label">Publish</span><span class="loop-arrow">→</span></div>
+      <div class="loop-step"><span class="loop-label highlight">Measure</span><span class="loop-arrow">→</span></div>
       <span class="loop-label">Learn</span>
     </div>
     <div class="insight-text">{{ footer_insight }}</div>
