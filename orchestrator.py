@@ -20,7 +20,7 @@ from agents.planner import PlannerAgent
 from agents.protocols import PlatformAgent
 from agents.review import ReviewAgent
 from bots.telegram_approval import ApprovalBot
-from memory.store import update_platform_post_id
+from memory.store import get_latest_analysis, update_platform_post_id
 from publishers.base import PublishError, PublishResult, Publisher
 from publishers.instagram import InstagramPublisher
 from publishers.linkedin import LinkedInPublisher
@@ -70,6 +70,19 @@ class Orchestrator:
         valid_platforms = [p for p in platforms if p in _ADAPTERS]
         print(f"Idea:      {topic.splitlines()[0]}")
         print(f"Platforms: {', '.join(valid_platforms)}\n")
+
+        # ── 0b. Analyst findings — inject what worked / what to improve ──
+        primary_platform = valid_platforms[0] if valid_platforms else "linkedin"
+        analyst = get_latest_analysis(platform=primary_platform)
+        if analyst:
+            print(f"Analyst context: {analyst['top_priority'][:80]}")
+            recs = "\n".join(f"- {r}" for r in analyst["recommendations"][:2])
+            topic += (
+                f"\n\n[Analyst Context — based on recent {primary_platform} performance]"
+                f"\nTop priority: {analyst['top_priority']}"
+                f"\nRecent recommendations:\n{recs}"
+            )
+            print()
 
         # ── 1. Plan → Content Contract ──────────────────────────
         print("Planning...")
