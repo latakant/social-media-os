@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>:root { --canvas-w:{{ canvas_w }}px; --canvas-h:{{ canvas_h }}px; }</style>
+<link rel="stylesheet" href="{{ base_css_url }}">
+{% from 'design-system/icons.html' import icon %}
+<style>
+body {
+  display: grid;
+  grid-template-rows: 18% 62% 15% 5%;
+  position: relative;
+}
+
+/* ── HEADER (18%) ───────────────────────────────────────── */
+.header {
+  position: relative; z-index: 1;
+  padding: 36px var(--sp-xl) 0;
+  display: flex; justify-content: space-between; align-items: flex-start;
+  border-bottom: 2px solid var(--primary);
+}
+.hero {
+  font-size: var(--t-hero);
+  font-weight: 900;
+  line-height: 0.9;
+  background: linear-gradient(135deg, var(--text) 0%, var(--primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.subtitle {
+  font-size: var(--t-detail);
+  color: var(--text-subtle);
+  margin-top: 8px;
+}
+
+/* ── SECTIONS GRID (62%) ────────────────────────────────── */
+.sections {
+  position: relative; z-index: 1;
+  display: grid;
+  grid-template-columns: repeat({{ sections | length }}, 1fr);
+  gap: 0;
+  overflow: hidden;
+}
+.section {
+  padding: 20px 24px;
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 8px;
+}
+.section:last-child { border-right: none; }
+
+.section-name {
+  font-size: var(--t-detail);
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--primary);
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.item-icon {
+  display: flex; align-items: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.item-body { flex: 1; min-width: 0; }
+.item-label {
+  font-size: var(--t-item);
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+.item-desc {
+  font-size: var(--t-detail);
+  color: var(--text-subtle);
+  margin-top: 1px;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── EXAMPLE (15%) ──────────────────────────────────────── */
+.example {
+  position: relative; z-index: 1;
+  padding: 0 var(--sp-xl);
+  display: flex; align-items: center; gap: var(--sp-md);
+  background: var(--bg-card-2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.code-block {
+  font-family: 'Courier New', monospace;
+  font-size: var(--t-detail);
+  color: var(--primary);
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border-accent);
+  border-radius: 8px;
+  padding: 8px 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 55%;
+}
+.code-explanation {
+  font-size: var(--t-detail);
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ── FOOTER (5%) ────────────────────────────────────────── */
+.footer {
+  position: relative; z-index: 1;
+  padding: 0 var(--sp-xl);
+  display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid var(--border);
+}
+.key-insight {
+  font-size: var(--t-detail);
+  color: var(--text-dim);
+  font-style: italic;
+}
+</style>
+</head>
+<body>
+  {% if illustration %}
+  <div class="bg-art"><img src="{{ illustration }}" /></div>
+  {% endif %}
+
+  <div class="header">
+    <div>
+      <div class="tag">CHEAT SHEET</div>
+      <div class="hero">{{ hero }}</div>
+      <div class="subtitle">{{ subtitle }}</div>
+    </div>
+    <div class="brand">Building in Public &bull; <em>AI Agents</em></div>
+  </div>
+
+  <div class="sections">
+    {% for section in sections %}
+    <div class="section">
+      <div class="section-name">{{ section.name }}</div>
+      {% for item in section['items'] %}
+      <div class="item">
+        <div class="item-icon">{{ icon(item.icon, size=20) }}</div>
+        <div class="item-body">
+          <div class="item-label">{{ item.label }}</div>
+          {% if item.description %}<div class="item-desc">{{ item.description }}</div>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if example and example.code %}
+  <div class="example">
+    <div class="code-block">{{ example.code }}</div>
+    <div class="code-explanation">{{ example.explanation }}</div>
+  </div>
+  {% else %}
+  <div class="example">
+    <div class="key-insight" style="font-size:var(--t-md); color:var(--text-muted); font-style:normal;">{{ key_insight }}</div>
+  </div>
+  {% endif %}
+
+  <div class="footer">
+    <div class="accent-bar"></div>
+    {% if example and example.code %}
+    <div class="key-insight">{{ key_insight }}</div>
+    {% endif %}
+    <div class="brand">Building in Public &bull; <em>AI Agents</em></div>
+  </div>
+</body>
+</html>

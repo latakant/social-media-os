@@ -10,6 +10,8 @@ AVAILABLE = [
     "architecture_card",
     "lesson_card",
     "comparison_card",
+    "lifecycle_card",
+    "cheat_sheet_card",
 ]
 
 

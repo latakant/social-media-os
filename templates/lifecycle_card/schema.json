@@ -1,0 +1,25 @@
+{
+  "template": "lifecycle_card",
+  "description": "Sequential numbered steps grouped into phases — CI/CD, deployments, agent workflows, user journeys",
+  "fields": {
+    "hero":     { "type": "string",  "description": "Main title 2-4 words ALL CAPS", "required": true },
+    "subtitle": { "type": "string",  "description": "One line — what this lifecycle does", "required": true },
+    "phases": {
+      "type": "array", "min": 1, "max": 3, "required": true,
+      "description": "Lifecycle phases. Each phase has a name and 2-5 numbered steps.",
+      "items": {
+        "name":  "string",
+        "steps": {
+          "type": "array", "min": 2, "max": 5,
+          "items": { "number": "integer", "icon": "string", "title": "string", "detail": "string" }
+        }
+      }
+    },
+    "example": {
+      "type": "object", "required": false,
+      "description": "Optional code example shown below phases",
+      "fields": { "code": "string", "explanation": "string" }
+    },
+    "key_insight": { "type": "string", "description": "Single most important takeaway shown in footer", "required": true }
+  }
+}

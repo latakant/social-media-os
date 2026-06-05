@@ -36,7 +36,13 @@
   --shadow:    0 8px 30px rgba(0,0,0,0.35);
   --shadow-sm: 0 4px 16px rgba(0,0,0,0.25);
 
-  /* Type scale */
+  /* Semantic typography — four levels, use these everywhere */
+  --t-hero:    88px;   /* Main visual title: REACT, SPRING BOOT LIFECYCLE */
+  --t-section: 44px;   /* Phase/section headers: Build Phase, Intermediate Ops */
+  --t-item:    22px;   /* Item labels: filter(), Build JAR, Component Name */
+  --t-detail:  14px;   /* Descriptions, code snippets, metadata */
+
+  /* Raw scale — kept for edge cases only, prefer semantic names above */
   --t-xs:  13px;
   --t-sm:  16px;
   --t-md:  22px;

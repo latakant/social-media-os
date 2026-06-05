@@ -13,7 +13,8 @@ import urllib.request
 
 from agents.adapters.instagram_adapter import InstagramAdapter
 from agents.adapters.linkedin_adapter import LinkedInAdapter
-from agents.content_generator import ContentGenerator
+from agents.information_architect import InformationArchitectAgent
+from agents.layout_agent import LayoutAgent
 from agents.infographic import InfographicAgent
 from agents.knowledge_curator import KnowledgeCuratorAgent
 from agents.planner import PlannerAgent
@@ -44,7 +45,8 @@ class Orchestrator:
     def __init__(self) -> None:
         self._curator   = KnowledgeCuratorAgent()
         self._planner   = PlannerAgent()
-        self._content   = ContentGenerator()
+        self._architect = InformationArchitectAgent()
+        self._layout    = LayoutAgent()
         self._infograph = InfographicAgent()
         self._reviewer  = ReviewAgent()
         self._bot       = ApprovalBot()
@@ -95,9 +97,14 @@ class Orchestrator:
         print(f"  Type:    {contract['content_type']}")
         print(f"  Insight: {contract['core_insight']}\n")
 
-        # ── 2. Card structure + image ────────────────────────────
-        print("Generating content structure...")
-        template_name, card_data = self._content.generate(contract)
+        # ── 2. Information Architecture → Layout → Image ─────────
+        print("Extracting content graph...")
+        content_graph = self._architect.extract(contract)
+        print(f"  Pattern:  {content_graph.get('pattern', '?')}")
+        print(f"  Nodes:    {len(content_graph.get('nodes', []))}")
+
+        print("Selecting layout...")
+        template_name, card_data = self._layout.transform(content_graph)
         print(f"  Template: {template_name}")
 
         loop = asyncio.get_event_loop()

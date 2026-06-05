@@ -1,0 +1,25 @@
+{
+  "template": "cheat_sheet_card",
+  "description": "Reference grid by category — API methods, commands, patterns, syntax cheat sheets",
+  "fields": {
+    "hero":     { "type": "string", "description": "Main title 2-4 words ALL CAPS", "required": true },
+    "subtitle": { "type": "string", "description": "One line description of what this covers", "required": true },
+    "sections": {
+      "type": "array", "min": 2, "max": 3, "required": true,
+      "description": "Category sections in 2-column layout. Each section has a name and 3-6 items.",
+      "items": {
+        "name":  "string",
+        "items": {
+          "type": "array", "min": 3, "max": 6,
+          "items": { "icon": "string", "label": "string", "description": "string" }
+        }
+      }
+    },
+    "example": {
+      "type": "object", "required": false,
+      "description": "Optional code example in terminal-style box",
+      "fields": { "code": "string", "explanation": "string" }
+    },
+    "key_insight": { "type": "string", "description": "Bottom-line takeaway", "required": true }
+  }
+}
