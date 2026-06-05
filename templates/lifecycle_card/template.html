@@ -46,7 +46,9 @@ body {
 .phase {
   padding: 24px 28px;
   border-right: 1px solid var(--border);
-  display: flex; flex-direction: column; gap: 12px;
+  display: flex; flex-direction: column;
+  justify-content: space-around;
+  gap: 0;
 }
 .phase:last-child { border-right: none; }
 
@@ -62,8 +64,9 @@ body {
 }
 
 .step {
+  min-height: 72px;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
   padding: 12px 14px;
   background: var(--bg-card);

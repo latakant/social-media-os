@@ -44,7 +44,9 @@ body {
 .section {
   padding: 20px 24px;
   border-right: 1px solid var(--border);
-  display: flex; flex-direction: column; gap: 8px;
+  display: flex; flex-direction: column;
+  justify-content: space-around;
+  gap: 0;
 }
 .section:last-child { border-right: none; }
 
@@ -60,8 +62,9 @@ body {
 }
 
 .item {
+  min-height: 56px;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
   padding: 10px 12px;
   background: var(--bg-card);
