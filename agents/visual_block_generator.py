@@ -12,6 +12,18 @@ from __future__ import annotations
 from schemas.visual_block import BlockType, Carousel, VisualBlock
 
 
+def _title_safe(s: str) -> str:
+    """Title-case a string while preserving short acronyms (RAG, MCP, API, LLM)."""
+    result = []
+    for word in s.split():
+        # Keep all-caps words of 4 chars or fewer as acronyms
+        if word.isupper() and 1 < len(word) <= 4:
+            result.append(word)
+        else:
+            result.append(word.capitalize())
+    return " ".join(result)
+
+
 # Block sequence per pattern — defines which slides are generated and in what order
 _PATTERN_SEQUENCE: dict[str, list[BlockType]] = {
     "lifecycle":    ["what", "why", "flow", "example", "takeaway"],
@@ -75,27 +87,32 @@ class VisualBlockGenerator:
         takeaways = graph.get("key_takeaways") or []
 
         if block_type == "what":
-            # First point = subtitle (the one-liner), rest = key nodes with detail
-            node_points = [
-                f"{n['label']} — {n['detail']}" if n.get("detail") else n["label"]
-                for n in nodes[:4]
-            ]
+            display_nodes = nodes[:4]
             return VisualBlock(
-                title=f"What is {hero.title()}?",
-                points=[subtitle] + node_points if subtitle else node_points,
+                title=f"What is {_title_safe(hero)}?",
+                points=[subtitle] + [n["label"] for n in display_nodes] if subtitle else [n["label"] for n in display_nodes],
+                point_items=(
+                    [{"label": subtitle, "detail": "", "icon": "brain"}] if subtitle else []
+                ) + [
+                    {"label": n["label"], "detail": n.get("detail", ""), "icon": n.get("icon", "agent")}
+                    for n in display_nodes
+                ],
                 **base,
             )
 
         if block_type == "why":
-            # Takeaways first, fall back to node details
             why_points = (
                 takeaways[:4]
                 or [n["detail"] for n in nodes[:4] if n.get("detail")]
                 or [n["label"] for n in nodes[:4]]
             )
             return VisualBlock(
-                title=f"Why {hero.title()} matters",
+                title=f"Why {_title_safe(hero)} matters",
                 points=why_points,
+                point_items=[
+                    {"label": p, "detail": "", "icon": "check"}
+                    for p in why_points
+                ],
                 **base,
             )
 
@@ -105,8 +122,9 @@ class VisualBlockGenerator:
                 input_nodes = nodes[:3]
             return VisualBlock(
                 title="Inputs",
-                points=[
-                    f"{n['label']} — {n['detail']}" if n.get("detail") else n["label"]
+                points=[n["label"] for n in input_nodes],
+                point_items=[
+                    {"label": n["label"], "detail": n.get("detail", ""), "icon": n.get("icon", "database")}
                     for n in input_nodes
                 ],
                 **base,
@@ -118,8 +136,9 @@ class VisualBlockGenerator:
                 output_nodes = nodes[-3:]
             return VisualBlock(
                 title="Outputs",
-                points=[
-                    f"{n['label']} — {n['detail']}" if n.get("detail") else n["label"]
+                points=[n["label"] for n in output_nodes],
+                point_items=[
+                    {"label": n["label"], "detail": n.get("detail", ""), "icon": n.get("icon", "send")}
                     for n in output_nodes
                 ],
                 **base,
@@ -174,7 +193,7 @@ class VisualBlockGenerator:
         if block_type == "takeaway":
             insight = takeaways[0] if takeaways else subtitle
             return VisualBlock(
-                title="Key Takeaway",
+                title=f"{_title_safe(hero)} — Key Takeaway",
                 highlight=insight,
                 **base,
             )

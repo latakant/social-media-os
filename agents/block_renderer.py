@@ -30,7 +30,7 @@ _BLOCK_TEMPLATE: dict[str, str] = {
 }
 
 _PLATFORM_DIMENSIONS: dict[str, tuple[int, int]] = {
-    "linkedin":           (1200, 1200),
+    "linkedin":           (1080, 1080),
     "linkedin_landscape": (1200, 627),
     "linkedin_portrait":  (1080, 1350),
     "instagram":          (1080, 1080),
@@ -100,6 +100,7 @@ class BlockRenderer:
             "type":        block.type,
             "title":       block.title,
             "points":      block.points,
+            "point_items": block.point_items,
             "flow":        block.flow,
             "code":        block.code,
             "code_lang":   block.code_lang,

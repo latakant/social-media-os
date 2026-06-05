@@ -44,6 +44,10 @@ class VisualBlock:
     right_label: str = ""                                # comparison: right header
     icon:      str = "agent"                             # SVG icon name for visual accent
 
+    # Structured per-item list — preferred over points when populated.
+    # Each dict: {label: str, detail: str, icon: str}
+    point_items: list[dict] = field(default_factory=list)
+
     order: int = 0          # position in the carousel (0-indexed)
     topic: str = ""         # parent topic — shown in footer
 

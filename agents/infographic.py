@@ -112,12 +112,12 @@ For comparison_card:
 
 
 _PLATFORM_DIMENSIONS: dict[str, tuple[int, int]] = {
-    "linkedin":            (1200, 1200),   # square carousel slide
-    "linkedin_landscape":  (1200, 627),    # single landscape post
-    "linkedin_portrait":   (1080, 1350),   # portrait carousel
+    "linkedin":            (1080, 1080),   # square carousel slide (PDF carousel)
+    "linkedin_landscape":  (1200, 627),    # single landscape post (1.91:1)
+    "linkedin_portrait":   (1080, 1350),   # portrait post (4:5)
     "instagram":           (1080, 1080),   # square
-    "instagram_portrait":  (1080, 1350),   # portrait
-    "default":             (1200, 1200),
+    "instagram_portrait":  (1080, 1350),   # portrait (4:5)
+    "default":             (1080, 1080),
 }
 
 

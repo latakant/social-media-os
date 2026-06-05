@@ -81,18 +81,32 @@ body {
   <div class="content">
     <div class="title">{{ title }}</div>
     <div class="points">
-      {% for p in points %}
-      {% set parts = p.split(' — ', 1) %}
-      <div class="point">
-        <div class="point-icon">{{ icon(block_icon, 20) }}</div>
-        <div class="point-body">
-          <div class="point-label">{{ parts[0] }}</div>
-          {% if parts | length > 1 %}
-          <div class="point-detail">{{ parts[1] }}</div>
-          {% endif %}
+      {% if point_items %}
+        {% for item in point_items %}
+        <div class="point">
+          <div class="point-icon">{{ icon(item.icon if item.icon else block_icon, 20) }}</div>
+          <div class="point-body">
+            <div class="point-label">{{ item.label }}</div>
+            {% if item.detail %}
+            <div class="point-detail">{{ item.detail }}</div>
+            {% endif %}
+          </div>
         </div>
-      </div>
-      {% endfor %}
+        {% endfor %}
+      {% else %}
+        {% for p in points %}
+        {% set parts = p.split(' — ', 1) %}
+        <div class="point">
+          <div class="point-icon">{{ icon(block_icon, 20) }}</div>
+          <div class="point-body">
+            <div class="point-label">{{ parts[0] }}</div>
+            {% if parts | length > 1 %}
+            <div class="point-detail">{{ parts[1] }}</div>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      {% endif %}
     </div>
   </div>
 
