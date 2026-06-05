@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="{{ base_css_url }}">
+<style>:root { --canvas-w:{{ canvas_w }}px; --canvas-h:{{ canvas_h }}px; {{ style_css }} }</style>
+{% from "design-system/icons.html" import icon %}
+<style>
+body {
+  display: grid;
+  grid-template-rows: 12% 68% 20%;
+  position: relative;
+}
+.header {
+  position: relative; z-index: 1;
+  padding: 20px var(--sp-xl) 0;
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+.content {
+  position: relative; z-index: 1;
+  padding: var(--sp-md) var(--sp-xl);
+  display: flex; flex-direction: column; justify-content: center; gap: var(--sp-sm);
+}
+.title {
+  font-size: var(--t-section);
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--text) 0%, var(--primary) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  line-height: 1.1;
+}
+.points { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+.point {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--primary);
+  border-radius: var(--card-radius);
+}
+.point-text { font-size: var(--t-item); font-weight: 600; color: var(--text); }
+.footer {
+  position: relative; z-index: 1;
+  padding: 0 var(--sp-xl);
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid var(--border);
+  background: var(--bg-card-2);
+}
+.slide-num {
+  font-size: var(--t-detail); font-weight: 700;
+  color: var(--primary); letter-spacing: 2px;
+}
+</style>
+</head>
+<body class="{{ body_class }}">
+  <div class="header">
+    <div class="tag">{{ topic | upper }}</div>
+    <div class="brand">Building in Public &bull; <em>AI Agents</em></div>
+  </div>
+  <div class="content">
+    <div class="title">{{ title }}</div>
+    <div class="points">
+      {% for p in points %}
+      <div class="point">
+        <div>{{ icon(block_icon, 20) }}</div>
+        <div class="point-text">{{ p }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="footer">
+    <div class="slide-num">{{ slide_label }}</div>
+    <div class="accent-bar"></div>
+    <div class="brand">Building in Public &bull; <em>AI Agents</em></div>
+  </div>
+</body>
+</html>

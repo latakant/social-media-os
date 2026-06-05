@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="{{ base_css_url }}">
+<style>:root { --canvas-w:{{ canvas_w }}px; --canvas-h:{{ canvas_h }}px; {{ style_css }} }</style>
+<style>
+body {
+  display: grid;
+  grid-template-rows: 12% 68% 20%;
+  position: relative;
+}
+.header {
+  position: relative; z-index: 1;
+  padding: 20px var(--sp-xl) 0;
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+.content {
+  position: relative; z-index: 1;
+  padding: var(--sp-md) var(--sp-xl);
+  display: flex; flex-direction: column; justify-content: center; gap: 0;
+}
+.title {
+  font-size: var(--t-section); font-weight: 900;
+  background: linear-gradient(135deg, var(--text) 0%, var(--primary) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: var(--sp-sm);
+}
+.steps { display: flex; flex-direction: column; justify-content: space-around; flex: 1; }
+.step-row { display: flex; flex-direction: column; }
+.step {
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--primary);
+  border-radius: var(--card-radius);
+}
+.step-num {
+  font-size: var(--t-detail); font-weight: 900; color: var(--primary);
+  background: rgba(56,189,248,0.1); border: 1px solid var(--border-accent);
+  border-radius: 6px; width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.step-text { font-size: var(--t-item); font-weight: 700; color: var(--text); }
+.arrow { font-size: 18px; color: var(--arrow); padding: 4px 0 4px 24px; }
+.footer {
+  position: relative; z-index: 1;
+  padding: 0 var(--sp-xl);
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid var(--border);
+  background: var(--bg-card-2);
+}
+.slide-num { font-size: var(--t-detail); font-weight: 700; color: var(--primary); letter-spacing: 2px; }
+</style>
+</head>
+<body class="{{ body_class }}">
+  <div class="header">
+    <div class="tag">{{ topic | upper }}</div>
+    <div class="brand">Building in Public &bull; <em>AI Agents</em></div>
+  </div>
+  <div class="content">
+    <div class="title">{{ title }}</div>
+    <div class="steps">
+      {% for step in flow %}
+      <div class="step-row">
+        <div class="step">
+          <div class="step-num">{{ loop.index }}</div>
+          <div class="step-text">{{ step }}</div>
+        </div>
+        {% if not loop.last %}<div class="arrow">↓</div>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="footer">
+    <div class="slide-num">{{ slide_label }}</div>
+    <div class="accent-bar"></div>
+    <div class="brand">Building in Public &bull; <em>AI Agents</em></div>
+  </div>
+</body>
+</html>
