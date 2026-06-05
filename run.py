@@ -36,7 +36,8 @@ from agents.adapters.linkedin_adapter import LinkedInAdapter
 from agents.review import ReviewAgent
 from agents.infographic import InfographicAgent
 from bots.telegram_approval import ApprovalBot
-from publishers.linkedin import LinkedInPublisher, PublishError
+from publishers.base import PublishError
+from publishers.linkedin import LinkedInPublisher
 from memory.store import update_platform_post_id
 
 load_dotenv()

@@ -1,21 +1,10 @@
 import os
 import time
-from dataclasses import dataclass
 from pathlib import Path
 
 import requests
 
-
-@dataclass
-class PublishResult:
-    platform_post_id: str    # LinkedIn URN e.g. urn:li:share:7234567890
-    author_urn: str
-
-
-class PublishError(Exception):
-    def __init__(self, status_code: int, body: str) -> None:
-        self.status_code = status_code
-        super().__init__(f"LinkedIn {status_code}: {body}")
+from publishers.base import PublishError, PublishResult
 
 
 class LinkedInPublisher:
@@ -113,10 +102,7 @@ class LinkedInPublisher:
             )
             if resp.status_code == 201:
                 platform_post_id = resp.headers.get("x-restli-id", "unknown")
-                return PublishResult(
-                    platform_post_id=platform_post_id,
-                    author_urn=self._person_urn,
-                )
+                return PublishResult(platform_post_id=platform_post_id)
             if resp.status_code == 429:
                 time.sleep(10 * (attempt + 1))
                 continue
