@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="{{ base_css_url }}">
-<style>:root { --canvas-w:{{ canvas_w }}px; --canvas-h:{{ canvas_h }}px; }</style>
+<style>:root { --canvas-w:{{ canvas_w }}px; --canvas-h:{{ canvas_h }}px; {{ style_css }} }</style>
 <style>
 body { display:flex; flex-direction:column; position:relative; }
 
@@ -62,7 +62,7 @@ body { display:flex; flex-direction:column; position:relative; }
 .verdict strong { color:var(--primary); font-weight:700; }
 </style>
 </head>
-<body>
+<body class="{{ body_class }}">
   {% if illustration %}
   <div class="bg-art"><img src="{{ illustration }}" /></div>
   {% endif %}

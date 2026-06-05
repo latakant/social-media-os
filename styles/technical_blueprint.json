@@ -1,0 +1,36 @@
+{
+  "name": "technical_blueprint",
+  "description": "Near-black, electric cyan, monospace font, grid background — engineering / architecture content",
+  "colors": {
+    "--bg":            "#080C14",
+    "--bg-card":       "#0D1321",
+    "--bg-card-2":     "#111827",
+    "--primary":       "#00D9FF",
+    "--primary-dark":  "#0099BB",
+    "--success":       "#00FF94",
+    "--danger":        "#FF4D4D",
+    "--text":          "#E2E8F0",
+    "--text-2":        "#94A3B8",
+    "--text-muted":    "#64748B",
+    "--text-subtle":   "#374151",
+    "--text-dim":      "#1F2937",
+    "--text-faint":    "#111827",
+    "--arrow":         "#1E3A5F",
+    "--border":        "rgba(0,217,255,0.10)",
+    "--border-accent": "rgba(0,217,255,0.30)"
+  },
+  "typography": {
+    "--t-hero":      "80px",
+    "--t-section":   "36px",
+    "--t-item":      "19px",
+    "--t-detail":    "13px",
+    "--font-family": "'JetBrains Mono', 'Fira Code', 'Courier New', monospace"
+  },
+  "spacing": {
+    "--card-radius": "4px"
+  },
+  "visual": {
+    "bg_class":             "bg-grid",
+    "illustration_opacity": "0.04"
+  }
+}

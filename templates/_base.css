@@ -9,10 +9,19 @@ body {
   width: var(--canvas-w);
   height: var(--canvas-h);
   background: var(--bg);
-  font-family: 'Inter', -apple-system, sans-serif;
+  font-family: var(--font-family);
   color: var(--text);
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Background pattern — activated by body.bg-grid */
+body.bg-grid {
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 60px 60px;
+  background-position: -1px -1px;
 }
 
 /* ── Shared components ──────────────────────────────────── */

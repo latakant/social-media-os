@@ -1,0 +1,36 @@
+{
+  "name": "linear_dark",
+  "description": "Dark navy, sky-blue accents, Inter — the baseline technical style",
+  "colors": {
+    "--bg":            "#0F172A",
+    "--bg-card":       "#1E293B",
+    "--bg-card-2":     "#263348",
+    "--primary":       "#38BDF8",
+    "--primary-dark":  "#0284C7",
+    "--success":       "#34D399",
+    "--danger":        "#F87171",
+    "--text":          "#F8FAFC",
+    "--text-2":        "#CBD5E1",
+    "--text-muted":    "#94A3B8",
+    "--text-subtle":   "#64748B",
+    "--text-dim":      "#475569",
+    "--text-faint":    "#334155",
+    "--arrow":         "#1E3A5F",
+    "--border":        "rgba(255,255,255,0.08)",
+    "--border-accent": "rgba(56,189,248,0.25)"
+  },
+  "typography": {
+    "--t-hero":       "88px",
+    "--t-section":    "44px",
+    "--t-item":       "22px",
+    "--t-detail":     "14px",
+    "--font-family":  "'Inter', -apple-system, sans-serif"
+  },
+  "spacing": {
+    "--card-radius":  "14px"
+  },
+  "visual": {
+    "bg_class":              "",
+    "illustration_opacity":  "0.07"
+  }
+}

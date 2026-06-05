@@ -132,14 +132,17 @@ class InfographicAgent:
         self._output_dir = Path(output_dir)
         self._output_dir.mkdir(parents=True, exist_ok=True)
 
-    def generate(self, post_text: str, platform: str = "default") -> str:
+    def generate(self, post_text: str, platform: str = "default",
+                 style: str = "linear_dark") -> str:
         """Legacy: extract structure from post text, then render."""
         data = self._extract_structure(post_text)
-        return self.render_direct(data.get("type", "concept_card"), data, platform=platform)
+        return self.render_direct(data.get("type", "concept_card"), data,
+                                  platform=platform, style=style)
 
-    def render_direct(self, template_type: str, card_data: dict, platform: str = "default") -> str:
+    def render_direct(self, template_type: str, card_data: dict,
+                      platform: str = "default", style: str = "linear_dark") -> str:
         """New flow: card data already structured, skip extraction."""
-        print(f"  Template: {template_type}  Platform: {platform}")
+        print(f"  Template: {template_type}  Platform: {platform}  Style: {style}")
         data = dict(card_data)
         data["type"] = template_type
 
@@ -151,7 +154,7 @@ class InfographicAgent:
         if illustration:
             data["illustration"] = illustration
 
-        html = self._render(template_type, data, platform)
+        html = self._render(template_type, data, platform, style)
         return self._screenshot(html, template_type, platform)
 
     def _generate_illustration(self, concept: str) -> str | None:
@@ -209,11 +212,20 @@ class InfographicAgent:
             return [self._strip_markdown(i) for i in obj]
         return obj
 
-    def _render(self, template_type: str, data: dict, platform: str = "default") -> str:
+    def _render(self, template_type: str, data: dict,
+                platform: str = "default", style: str = "linear_dark") -> str:
+        from agents.style_agent import StyleAgent
         w, h = _PLATFORM_DIMENSIONS.get(platform, _PLATFORM_DIMENSIONS["default"])
         base_css_url = (self._templates_dir / "_base.css").as_uri()
+        sa = StyleAgent()
         template = self._env.get_template(f"{template_type}/template.html")
-        return template.render(base_css_url=base_css_url, canvas_w=w, canvas_h=h, **data)
+        return template.render(
+            base_css_url=base_css_url,
+            canvas_w=w, canvas_h=h,
+            style_css=sa.css_overrides(style),
+            body_class=sa.body_class(style),
+            **data,
+        )
 
     def _screenshot(self, html: str, label: str = "card", platform: str = "default") -> str:
         w, h = _PLATFORM_DIMENSIONS.get(platform, _PLATFORM_DIMENSIONS["default"])

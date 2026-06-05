@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="{{ base_css_url }}">
-<style>:root { --canvas-w:{{ canvas_w }}px; --canvas-h:{{ canvas_h }}px; }</style>
+<style>:root { --canvas-w:{{ canvas_w }}px; --canvas-h:{{ canvas_h }}px; {{ style_css }} }</style>
 <style>
 body { display:flex; flex-direction:column; position:relative; }
 body.left-bar::before {
@@ -65,7 +65,7 @@ body.left-bar::before {
 .insight { font-size:15px; color:var(--text-faint); font-style:italic; }
 </style>
 </head>
-<body class="left-bar">
+<body class="left-bar {{ body_class }}">
   {% if illustration %}
   <div class="bg-art"><img src="{{ illustration }}" /></div>
   {% endif %}

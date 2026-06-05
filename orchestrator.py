@@ -58,6 +58,7 @@ class Orchestrator:
         platforms: list[str],
         audience: str = "developers",
         objective: str = "thought_leadership",
+        style: str = "linear_dark",
     ) -> dict[str, PublishResult]:
         print(f"\n{DIV}")
         print("Social Media OS")
@@ -110,7 +111,8 @@ class Orchestrator:
         loop = asyncio.get_event_loop()
         with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
             image_result = await loop.run_in_executor(
-                pool, self._infograph.render_direct, template_name, card_data, primary_platform
+                pool, self._infograph.render_direct,
+                template_name, card_data, primary_platform, style
             )
 
         image_path: str | None = None

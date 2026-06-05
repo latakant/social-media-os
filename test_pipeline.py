@@ -20,7 +20,7 @@ load_dotenv()
 DIV = "=" * 52
 
 
-def run(topic: str) -> None:
+def run(topic: str, style: str = "linear_dark") -> None:
     print(f"\n{DIV}")
     print(f"Topic: {topic}")
     print(f"{DIV}\n")
@@ -50,7 +50,7 @@ def run(topic: str) -> None:
     print(f"   fields   : {[k for k in card_data.keys() if k != 'type']}")
 
     print("\n4. Rendering image...")
-    image_path = InfographicAgent().render_direct(template_name, card_data, platform="linkedin")
+    image_path = InfographicAgent().render_direct(template_name, card_data, platform="linkedin", style=style)
     print(f"\n{DIV}")
     print(f"Image: {image_path}")
     print(f"{DIV}\n")
@@ -64,5 +64,14 @@ def run(topic: str) -> None:
 
 
 if __name__ == "__main__":
-    topic = " ".join(sys.argv[1:]) if len(sys.argv) > 1 else "ReAct — the reasoning pattern behind most AI agents"
-    run(topic)
+    args = sys.argv[1:]
+    style = "linear_dark"
+    topic_parts = []
+    i = 0
+    while i < len(args):
+        if args[i] == "--style" and i + 1 < len(args):
+            style = args[i + 1]; i += 2
+        else:
+            topic_parts.append(args[i]); i += 1
+    topic = " ".join(topic_parts) or "ReAct — the reasoning pattern behind most AI agents"
+    run(topic, style)

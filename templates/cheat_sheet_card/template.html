@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="{{ base_css_url }}">
-<style>:root { --canvas-w:{{ canvas_w }}px; --canvas-h:{{ canvas_h }}px; }</style>
+<style>:root { --canvas-w:{{ canvas_w }}px; --canvas-h:{{ canvas_h }}px; {{ style_css }} }</style>
 {% from 'design-system/icons.html' import icon %}
 <style>
 body {
@@ -66,7 +66,7 @@ body {
   padding: 10px 12px;
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--card-radius);
 }
 .item-icon {
   display: flex; align-items: center;
@@ -105,7 +105,7 @@ body {
   color: var(--primary);
   background: rgba(0,0,0,0.3);
   border: 1px solid var(--border-accent);
-  border-radius: 8px;
+  border-radius: var(--card-radius);
   padding: 8px 16px;
   white-space: nowrap;
   overflow: hidden;
@@ -132,7 +132,7 @@ body {
 }
 </style>
 </head>
-<body>
+<body class="{{ body_class }}">
   {% if illustration %}
   <div class="bg-art"><img src="{{ illustration }}" /></div>
   {% endif %}

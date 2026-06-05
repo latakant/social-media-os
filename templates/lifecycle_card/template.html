@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="{{ base_css_url }}">
-<style>:root { --canvas-w:{{ canvas_w }}px; --canvas-h:{{ canvas_h }}px; }</style>
+<style>:root { --canvas-w:{{ canvas_w }}px; --canvas-h:{{ canvas_h }}px; {{ style_css }} }</style>
 {% from 'design-system/icons.html' import icon %}
 <style>
 body {
@@ -68,7 +68,7 @@ body {
   padding: 12px 14px;
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--card-radius);
   box-shadow: var(--shadow-sm);
 }
 .step-num {
@@ -77,7 +77,7 @@ body {
   color: var(--primary);
   background: rgba(56,189,248,0.1);
   border: 1px solid var(--border-accent);
-  border-radius: 6px;
+  border-radius: var(--card-radius);
   width: 26px; height: 26px;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
@@ -116,7 +116,7 @@ body {
   color: var(--primary);
   background: rgba(0,0,0,0.3);
   border: 1px solid var(--border-accent);
-  border-radius: 8px;
+  border-radius: var(--card-radius);
   padding: 8px 16px;
   white-space: nowrap;
   overflow: hidden;
@@ -143,7 +143,7 @@ body {
 }
 </style>
 </head>
-<body>
+<body class="{{ body_class }}">
   {% if illustration %}
   <div class="bg-art"><img src="{{ illustration }}" /></div>
   {% endif %}

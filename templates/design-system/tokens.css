@@ -58,4 +58,8 @@
   --sp-md: 40px;
   --sp-lg: 60px;
   --sp-xl: 80px;
+
+  /* Style overrides — controlled by StyleAgent */
+  --font-family: 'Inter', -apple-system, sans-serif;
+  --card-radius: 14px;
 }

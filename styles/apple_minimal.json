@@ -1,0 +1,36 @@
+{
+  "name": "apple_minimal",
+  "description": "Pure black, iOS blue, large whitespace, system fonts — influenced by Apple Dark Mode",
+  "colors": {
+    "--bg":            "#000000",
+    "--bg-card":       "#1C1C1E",
+    "--bg-card-2":     "#2C2C2E",
+    "--primary":       "#0A84FF",
+    "--primary-dark":  "#0066CC",
+    "--success":       "#30D158",
+    "--danger":        "#FF453A",
+    "--text":          "#FFFFFF",
+    "--text-2":        "#EBEBF5",
+    "--text-muted":    "#8E8E93",
+    "--text-subtle":   "#636366",
+    "--text-dim":      "#48484A",
+    "--text-faint":    "#3A3A3C",
+    "--arrow":         "#2C2C2E",
+    "--border":        "rgba(255,255,255,0.12)",
+    "--border-accent": "rgba(10,132,255,0.40)"
+  },
+  "typography": {
+    "--t-hero":      "96px",
+    "--t-section":   "48px",
+    "--t-item":      "24px",
+    "--t-detail":    "15px",
+    "--font-family": "-apple-system, 'Helvetica Neue', sans-serif"
+  },
+  "spacing": {
+    "--card-radius": "16px"
+  },
+  "visual": {
+    "bg_class":             "",
+    "illustration_opacity": "0.04"
+  }
+}

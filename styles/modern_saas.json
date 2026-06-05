@@ -1,0 +1,36 @@
+{
+  "name": "modern_saas",
+  "description": "Deep zinc, violet accents, generous radius — SaaS product / startup aesthetic",
+  "colors": {
+    "--bg":            "#09090B",
+    "--bg-card":       "#18181B",
+    "--bg-card-2":     "#27272A",
+    "--primary":       "#A78BFA",
+    "--primary-dark":  "#7C3AED",
+    "--success":       "#4ADE80",
+    "--danger":        "#F87171",
+    "--text":          "#FAFAFA",
+    "--text-2":        "#D4D4D8",
+    "--text-muted":    "#A1A1AA",
+    "--text-subtle":   "#71717A",
+    "--text-dim":      "#52525B",
+    "--text-faint":    "#3F3F46",
+    "--arrow":         "#27272A",
+    "--border":        "rgba(255,255,255,0.06)",
+    "--border-accent": "rgba(167,139,250,0.30)"
+  },
+  "typography": {
+    "--t-hero":      "84px",
+    "--t-section":   "40px",
+    "--t-item":      "22px",
+    "--t-detail":    "14px",
+    "--font-family": "'Inter', -apple-system, sans-serif"
+  },
+  "spacing": {
+    "--card-radius": "20px"
+  },
+  "visual": {
+    "bg_class":             "",
+    "illustration_opacity": "0.05"
+  }
+}

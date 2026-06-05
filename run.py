@@ -17,9 +17,10 @@ from orchestrator import Orchestrator
 load_dotenv()
 
 
-def _parse_args() -> tuple[str, list[str]]:
+def _parse_args() -> tuple[str, list[str], str]:
     args = sys.argv[1:]
     platforms: list[str] = ["linkedin"]
+    style: str = "linear_dark"
     topic_parts: list[str] = []
 
     i = 0
@@ -30,15 +31,18 @@ def _parse_args() -> tuple[str, list[str]]:
             while i < len(args) and not args[i].startswith("--"):
                 platforms.append(args[i])
                 i += 1
+        elif args[i] == "--style" and i + 1 < len(args):
+            style = args[i + 1]
+            i += 2
         else:
             topic_parts.append(args[i])
             i += 1
 
-    return " ".join(topic_parts), platforms
+    return " ".join(topic_parts), platforms, style
 
 
 if __name__ == "__main__":
-    topic, platforms = _parse_args()
+    topic, platforms, style = _parse_args()
 
     if not topic:
         suggestion = KnowledgeCuratorAgent().pick_next()
@@ -57,4 +61,4 @@ if __name__ == "__main__":
                 print("No input.")
                 sys.exit(0)
 
-    asyncio.run(Orchestrator().run(topic, platforms=platforms))
+    asyncio.run(Orchestrator().run(topic, platforms=platforms, style=style))
