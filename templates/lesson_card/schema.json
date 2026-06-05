@@ -1,0 +1,10 @@
+{
+  "template": "lesson_card",
+  "description": "Insight, mistake, or hard lesson learned from building",
+  "fields": {
+    "lesson_number": { "type": "string", "description": "Number only", "required": true },
+    "headline": { "type": "string", "description": "3-6 words. Bold punchline. No markdown.", "required": true },
+    "body": { "type": "string", "description": "2-3 sentences. Direct. What happened and why it matters.", "required": true },
+    "context": { "type": "string", "description": "One short line — project and situation", "required": true }
+  }
+}

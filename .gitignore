@@ -1,0 +1,8 @@
+.env
+.env.*
+__pycache__/
+*.pyc
+*.db
+data/images/
+.cortex/
+node_modules/

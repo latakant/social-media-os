@@ -1,0 +1,22 @@
+{
+  "template": "build_card",
+  "description": "Build-in-public progress update — topic focused, not day focused",
+  "fields": {
+    "project": { "type": "string", "description": "Project or topic name — what you're building", "required": true },
+    "core_insight": { "type": "string", "description": "One line — the key thing being learned or built", "required": true },
+    "built": {
+      "type": "array",
+      "items": { "text": "string", "sub": "string" },
+      "min": 2, "max": 5,
+      "description": "Shipped items. sub is optional one-line detail.",
+      "required": true
+    },
+    "next": {
+      "type": "array",
+      "items": { "text": "string", "sub": "string" },
+      "min": 2, "max": 4,
+      "description": "Next items. sub is optional.",
+      "required": true
+    }
+  }
+}

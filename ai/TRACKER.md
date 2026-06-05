@@ -1,0 +1,1 @@
+2026-06-04 — Built social-intel from scratch: 5 template cards, Content Pyramid architecture, knowledge graph (50 nodes, 11 layers), Telegram bot with suggestion loop, LinkedIn publisher with AI infographics — 0 commits (no git) — next: git init + first commit, then wire KnowledgeCuratorAgent into run.py

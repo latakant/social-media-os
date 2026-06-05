@@ -1,0 +1,29 @@
+{
+  "followers": 447,
+  "profile_visits": 130,
+  "story_views": 3700,
+  "post_reach": 1200,
+  "post_impressions": 2100,
+  "engagements": 168,
+  "followers_gained": 12,
+  "followers_lost": 8,
+  "audience_gender": {"male": 0.88, "female": 0.12},
+  "audience_age": {
+    "13-17": 0.02,
+    "18-24": 0.15,
+    "25-34": 0.45,
+    "35-44": 0.28,
+    "45+": 0.10
+  },
+  "active_hours": {
+    "15": 180,
+    "16": 220,
+    "17": 310,
+    "18": 420,
+    "19": 480,
+    "20": 390,
+    "21": 280
+  },
+  "captured_at": "2026-06-03T00:00:00",
+  "period_days": 30
+}

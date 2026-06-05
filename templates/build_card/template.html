@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  width:1200px; height:1200px; overflow:hidden;
+  background:#0F172A;
+  font-family:'Inter',-apple-system,sans-serif;
+  color:#F8FAFC;
+  display:flex; flex-direction:column;
+  -webkit-font-smoothing:antialiased;
+  position:relative;
+}
+
+.bg-art { position:fixed; inset:0; z-index:0; overflow:hidden; }
+.bg-art img {
+  width:100%; height:100%; object-fit:cover;
+  opacity:0.06; filter:blur(10px);
+}
+
+body::before {
+  content:''; position:fixed; left:0; top:0; bottom:0; width:5px;
+  background:linear-gradient(180deg,#38BDF8,#0284C7); z-index:2;
+}
+
+.header {
+  position:relative; z-index:1;
+  padding:56px 80px 0 88px;
+  display:flex; justify-content:space-between; align-items:flex-start;
+}
+.tag {
+  font-size:12px; font-weight:700; letter-spacing:3px;
+  color:#38BDF8; text-transform:uppercase; margin-bottom:16px;
+}
+.topic {
+  font-size:60px; font-weight:900; line-height:1.0;
+  background:linear-gradient(135deg,#F8FAFC 0%,#38BDF8 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  max-width:680px;
+}
+.project-sub { font-size:18px; color:#475569; margin-top:12px; font-weight:500; }
+.brand { font-size:13px; color:#334155; font-weight:600; text-align:right; }
+.brand em { color:#38BDF8; font-style:normal; }
+
+.accent-bar {
+  position:relative; z-index:1;
+  margin:32px 80px 0 88px;
+  width:60px; height:4px;
+  background:linear-gradient(90deg,#38BDF8,transparent); border-radius:2px;
+}
+
+.lists {
+  position:relative; z-index:1;
+  flex:1; padding:36px 80px 36px 88px;
+  display:grid; grid-template-columns:1fr 1fr; gap:52px;
+  align-content:start;
+}
+.section-label {
+  font-size:12px; font-weight:700; letter-spacing:2px;
+  text-transform:uppercase; padding-bottom:16px;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+  margin-bottom:24px;
+}
+.section-label.built { color:#34D399; }
+.section-label.next  { color:#38BDF8; }
+
+.item { display:flex; align-items:flex-start; gap:14px; margin-bottom:24px; }
+.item-check { font-size:16px; flex-shrink:0; margin-top:3px; font-weight:700; }
+.item-check.built { color:#34D399; }
+.item-check.next  { color:#38BDF8; }
+.item-text { font-size:22px; font-weight:600; color:#F8FAFC; line-height:1.3; }
+.item-sub  { font-size:14px; color:#64748B; margin-top:4px; line-height:1.4; }
+
+.footer {
+  position:relative; z-index:1;
+  padding:20px 80px 48px 88px;
+  border-top:1px solid rgba(255,255,255,0.05);
+  display:flex; justify-content:space-between; align-items:center;
+}
+.insight { font-size:15px; color:#334155; font-style:italic; }
+</style>
+</head>
+<body>
+  {% if illustration %}
+  <div class="bg-art"><img src="{{ illustration }}" /></div>
+  {% endif %}
+
+  <div class="header">
+    <div>
+      <div class="tag">BUILD IN PUBLIC</div>
+      <div class="topic">{{ project }}</div>
+      <div class="project-sub">{{ core_insight if core_insight else "Shipping in public" }}</div>
+    </div>
+    <div class="brand">Building in Public<br><em>AI Agents</em></div>
+  </div>
+
+  <div class="accent-bar"></div>
+
+  <div class="lists">
+    <div class="section">
+      <div class="section-label built">✓ Shipped</div>
+      {% for item in built %}
+      <div class="item">
+        <span class="item-check built">✓</span>
+        <div>
+          <div class="item-text">{{ item.text }}</div>
+          {% if item.sub %}<div class="item-sub">{{ item.sub }}</div>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="section">
+      <div class="section-label next">→ Next</div>
+      {% for item in next %}
+      <div class="item">
+        <span class="item-check next">→</span>
+        <div>
+          <div class="item-text">{{ item.text }}</div>
+          {% if item.sub %}<div class="item-sub">{{ item.sub }}</div>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="insight">Every shipped component is one less reason to wait.</div>
+    <div class="brand">Building in Public &bull; <em>AI Agents</em></div>
+  </div>
+</body>
+</html>

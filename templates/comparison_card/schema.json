@@ -1,0 +1,16 @@
+{
+  "template": "comparison_card",
+  "description": "A vs B comparison — LangGraph vs LangChain, MCP vs APIs, etc.",
+  "fields": {
+    "left_name": { "type": "string", "description": "Name of option A", "required": true },
+    "right_name": { "type": "string", "description": "Name of option B", "required": true },
+    "rows": {
+      "type": "array",
+      "items": { "left": "string", "right": "string" },
+      "min": 4, "max": 6,
+      "description": "Comparison rows — each is one dimension, left vs right",
+      "required": true
+    },
+    "verdict": { "type": "string", "description": "One sentence — when to use which and why", "required": true }
+  }
+}

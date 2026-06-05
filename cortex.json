@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "id": "social-intel",
+  "name": "Social Intelligence Agent",
+  "type": "tool",
+  "domain": "ai-infrastructure",
+  "status": "active",
+  "stack": ["python", "groq", "playwright", "sqlite"],
+  "cortex_version": "0.1",
+  "memory": { "provider": "filesystem" },
+  "policies": { "provider": "filesystem" }
+}

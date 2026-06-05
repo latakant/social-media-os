@@ -1,0 +1,15 @@
+{
+  "template": "concept_card",
+  "description": "Explains what a concept is — MCP, RAG, ReAct, Agents, etc.",
+  "fields": {
+    "concept_name": { "type": "string", "description": "2-3 words in CAPS", "required": true },
+    "tagline": { "type": "string", "description": "One sentence — what it is and why it matters", "required": true },
+    "steps": {
+      "type": "array",
+      "items": { "label": "string", "text": "string", "desc": "string" },
+      "min": 3, "max": 5,
+      "description": "Flow steps. label is short category (TOOLS, STEP 1). desc is one short line.",
+      "required": true
+    }
+  }
+}

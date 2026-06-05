@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  width:1200px; height:1200px; overflow:hidden;
+  background:#0F172A;
+  font-family:'Inter',-apple-system,sans-serif;
+  color:#F8FAFC;
+  display:flex; flex-direction:column;
+  -webkit-font-smoothing:antialiased;
+  position:relative;
+}
+
+.bg-art { position:fixed; inset:0; z-index:0; overflow:hidden; }
+.bg-art img {
+  width:100%; height:100%; object-fit:cover;
+  opacity:0.05; filter:blur(12px);
+}
+
+.top-bar { height:5px; background:linear-gradient(90deg,#38BDF8,#0284C7,#0F172A); position:relative; z-index:1; }
+
+.header {
+  position:relative; z-index:1;
+  padding:48px 80px 36px;
+  display:flex; justify-content:space-between; align-items:center;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.tag { font-size:13px; font-weight:700; letter-spacing:3px; color:#38BDF8; text-transform:uppercase; }
+.brand { font-size:13px; color:#334155; font-weight:600; }
+.brand em { color:#38BDF8; font-style:normal; }
+
+/* VS ARENA */
+.arena {
+  position:relative; z-index:1;
+  flex:1; display:grid; grid-template-columns:1fr 100px 1fr;
+  padding:0 40px;
+}
+.side { padding:40px; display:flex; flex-direction:column; gap:0; }
+
+.side-name {
+  font-size:44px; font-weight:900; margin-bottom:32px; line-height:1.0;
+}
+.side-left .side-name  { color:#F87171; }
+.side-right .side-name { color:#34D399; }
+
+.row {
+  padding:18px 0;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  font-size:20px; font-weight:500; line-height:1.4;
+  display:flex; align-items:center; gap:12px;
+}
+.row-icon { font-size:16px; flex-shrink:0; }
+.side-left  .row { color:#94A3B8; }
+.side-right .row { color:#E2E8F0; }
+
+.vs-col {
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:flex-start; padding-top:40px; gap:0;
+}
+.vs-badge {
+  background:linear-gradient(135deg,#38BDF8,#0284C7);
+  color:#fff; font-size:20px; font-weight:900;
+  width:60px; height:60px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 8px 30px rgba(56,189,248,0.3);
+  margin-bottom:20px; flex-shrink:0;
+}
+.vs-line { width:1px; flex:1; background:linear-gradient(180deg,rgba(56,189,248,0.2),transparent); }
+
+.footer {
+  position:relative; z-index:1;
+  padding:24px 80px;
+  background:rgba(30,41,59,0.8);
+  border-top:1px solid rgba(255,255,255,0.06);
+  display:flex; align-items:center; justify-content:center;
+}
+.verdict { font-size:18px; color:#64748B; text-align:center; line-height:1.5; }
+.verdict strong { color:#38BDF8; font-weight:700; }
+</style>
+</head>
+<body>
+  {% if illustration %}
+  <div class="bg-art"><img src="{{ illustration }}" /></div>
+  {% endif %}
+
+  <div class="top-bar"></div>
+  <div class="header">
+    <div class="tag">COMPARISON</div>
+    <div class="brand">Building in Public &bull; <em>AI Agents</em></div>
+  </div>
+
+  <div class="arena">
+    <div class="side side-left">
+      <div class="side-name">{{ left_name }}</div>
+      {% for row in rows %}
+      <div class="row"><span class="row-icon">✗</span>{{ row.left }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="vs-col">
+      <div class="vs-badge">VS</div>
+      <div class="vs-line"></div>
+    </div>
+
+    <div class="side side-right">
+      <div class="side-name">{{ right_name }}</div>
+      {% for row in rows %}
+      <div class="row"><span class="row-icon">✓</span>{{ row.right }}</div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="verdict">{{ verdict }}</div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "template": "architecture_card",
+  "description": "System design, pipeline flows, multi-agent architecture",
+  "fields": {
+    "system_name": { "type": "string", "description": "3-4 words title case", "required": true },
+    "subtitle": { "type": "string", "description": "One line — what this system does", "required": true },
+    "components": {
+      "type": "array",
+      "items": { "icon": "string", "name": "string", "role": "string", "tags": "array" },
+      "min": 3, "max": 5,
+      "description": "Pipeline components in order. icon is emoji. tags are short labels.",
+      "required": true
+    },
+    "footer_insight": { "type": "string", "description": "Single most important architectural insight", "required": true }
+  }
+}
