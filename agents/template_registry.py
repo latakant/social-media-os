@@ -12,6 +12,7 @@ AVAILABLE = [
     "comparison_card",
     "lifecycle_card",
     "cheat_sheet_card",
+    "architecture_card_v2",
 ]
 
 

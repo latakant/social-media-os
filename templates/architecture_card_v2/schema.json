@@ -1,0 +1,24 @@
+{
+  "template": "architecture_card_v2",
+  "description": "SVG-based system architecture diagram — nodes, directed edges, layered by phase",
+  "fields": {
+    "hero":     { "type": "string", "description": "System name 2-4 words ALL CAPS", "required": true },
+    "subtitle": { "type": "string", "description": "One line — what this system does", "required": true },
+    "phases": {
+      "type": "array", "min": 1, "max": 4, "required": true,
+      "description": "Ordered phases/layers rendered as columns left-to-right.",
+      "items": { "name": "string", "node_ids": "array" }
+    },
+    "nodes": {
+      "type": "array", "min": 3, "max": 10, "required": true,
+      "description": "System components. id must be unique. icon from the SVG icon set.",
+      "items": { "id": "string", "label": "string", "icon": "string", "detail": "string", "phase": "string" }
+    },
+    "edges": {
+      "type": "array", "min": 2, "required": true,
+      "description": "Directed connections. from/to reference node ids. label is optional.",
+      "items": { "from": "string", "to": "string", "label": "string" }
+    },
+    "footer_insight": { "type": "string", "description": "Single most important architectural insight", "required": true }
+  }
+}

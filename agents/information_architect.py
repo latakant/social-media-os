@@ -19,7 +19,7 @@ _PATTERNS = (
     "lifecycle    — sequential steps with phases (CI/CD, deployment, agent workflow, user journey)",
     "cheatsheet   — reference grid by category (API methods, commands, patterns, syntax)",
     "comparison   — two options side by side (A vs B, old way vs new way)",
-    "architecture — system components and relationships (multi-agent, microservices, pipeline)",
+    "architecture — system components with directed data/control flow (RAG, multi-agent, microservices, MCP)",
     "process_flow — decision/branching workflow (algorithm, decision tree, if/else logic)",
     "hierarchy    — nested/categorized concepts (layers, taxonomies, levels)",
 )
@@ -65,7 +65,8 @@ Rules:
 - comparison/architecture: phases optional
 - hero is the visual headline, not the topic verbatim
 - icon must be one of: {icons}
-- edges define flow for lifecycle and process_flow patterns
+- edges define flow for lifecycle, process_flow, AND architecture patterns
+- for architecture: every node must connect via at least one edge
 - example.code may be empty string if not applicable
 - key_takeaways: 1-2 standalone insight sentences"""
 

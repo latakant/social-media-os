@@ -16,7 +16,7 @@ _PATTERN_TEMPLATE: dict[str, str] = {
     "cheatsheet":   "cheat_sheet_card",
     "hierarchy":    "cheat_sheet_card",
     "comparison":   "comparison_card",
-    "architecture": "architecture_card",
+    "architecture": "architecture_card_v2",
     "concept":      "concept_card",
     "lesson":       "lesson_card",
     "build_update": "build_card",
@@ -76,7 +76,9 @@ class LayoutAgent:
         return _FALLBACK_CONTENT_TYPE_TEMPLATE.get(content_type, "concept_card")
 
     def _fill_template(self, graph: dict, template_name: str) -> dict:
-        # Pass the full raw schema JSON so the LLM sees every nested field
+        # Normalise None lists so the LLM doesn't see nulls
+        clean_graph = {k: (v if v is not None else []) for k, v in graph.items()
+                       if not k.startswith("_")}
         schema_desc = json.dumps(load_schema(template_name), indent=2)
         response = self._client.chat.completions.create(
             model="llama-3.3-70b-versatile",
@@ -84,7 +86,7 @@ class LayoutAgent:
             messages=[{
                 "role": "user",
                 "content": _PROMPT.format(
-                    graph_json=json.dumps(graph, indent=2),
+                    graph_json=json.dumps(clean_graph, indent=2),
                     template_name=template_name,
                     schema_desc=schema_desc,
                 ),

@@ -218,12 +218,29 @@ class InfographicAgent:
         w, h = _PLATFORM_DIMENSIONS.get(platform, _PLATFORM_DIMENSIONS["default"])
         base_css_url = (self._templates_dir / "_base.css").as_uri()
         sa = StyleAgent()
+
+        extra: dict = {}
+        if template_type == "architecture_card_v2":
+            from agents.svg_layout import compute_layout
+            positions, phase_labels, col_w, svg_h = compute_layout(
+                data.get("nodes", []),
+                data.get("phases", []),
+                w, h,
+            )
+            extra = {
+                "positions":    positions,
+                "phase_labels": phase_labels,
+                "col_w":        col_w,
+                "svg_h":        svg_h,
+            }
+
         template = self._env.get_template(f"{template_type}/template.html")
         return template.render(
             base_css_url=base_css_url,
             canvas_w=w, canvas_h=h,
             style_css=sa.css_overrides(style),
             body_class=sa.body_class(style),
+            **extra,
             **data,
         )
 

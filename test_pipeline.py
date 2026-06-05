@@ -35,7 +35,7 @@ def run(topic: str, style: str = "linear_dark") -> None:
     print(f"   pattern  : {graph['pattern']}")
     print(f"   hero     : {graph['hero']}")
     print(f"   nodes    : {len(graph.get('nodes', []))}")
-    print(f"   phases   : {len(graph.get('phases', []))}")
+    print(f"   phases   : {len(graph.get('phases') or [])}")
     if graph.get('key_takeaways'):
         print(f"   takeaway : {graph['key_takeaways'][0][:80]}")
 
