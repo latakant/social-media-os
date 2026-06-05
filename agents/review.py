@@ -7,8 +7,14 @@ from schemas.reports import ReviewResult
 
 
 _LIMITS = {
-    "linkedin": {"min_words": 80, "max_words": 300, "max_chars": 3000},
-    "instagram": {"min_words": 10, "max_words": 80, "max_chars": 2200},
+    "linkedin": {
+        "min_words": 80, "max_words": 300, "max_chars": 3000,
+        "hashtag_rule": "No hashtags allowed.",
+    },
+    "instagram": {
+        "min_words": 10, "max_words": 80, "max_chars": 2200,
+        "hashtag_rule": "3-5 specific hashtags required. Generic tags (#ai, #tech, #coding) are not allowed.",
+    },
 }
 
 _PROMPT = """You are an editorial reviewer. Review this {platform} post draft against the brand voice below.
@@ -25,7 +31,7 @@ Check every rule in the brand voice. Also check:
 - Does the post start with a hook or state a conclusion? (not a question as opening)
 - Is the tone direct and technical, not soft or corporate?
 - Are there any emojis? (not allowed)
-- Are there any hashtags? (not allowed)
+- Hashtags: {hashtag_rule}
 - Does it end with a direct question or a specific link? (required)
 - Is the word count between {min_words} and {max_words}?
 
@@ -68,6 +74,7 @@ class ReviewAgent:
                         word_count=word_count,
                         min_words=limits["min_words"],
                         max_words=limits["max_words"],
+                        hashtag_rule=limits["hashtag_rule"],
                     ),
                 }
             ],
