@@ -18,6 +18,7 @@ import sys
 from dotenv import load_dotenv
 
 from agents.planner import PlannerAgent
+from agents.knowledge_curator import KnowledgeCuratorAgent
 
 def _clear_telegram_session() -> None:
     """Drop any stale Telegram getUpdates sessions before starting."""
@@ -59,11 +60,24 @@ async def main(user_input: str) -> None:
     print(f"\n{DIV}")
     print("Social Intelligence Agent")
     print(f"{DIV}\n")
-    print(f"Idea: {user_input}\n")
+
+    # ── 0. Knowledge Curator → enrich input with graph context ──
+    curator = KnowledgeCuratorAgent()
+    kg_node: dict | None = curator.find_node(user_input) or curator.pick_next()
+
+    if kg_node:
+        print(f"Knowledge node: [{kg_node['layer_name']}] {kg_node['topic']}")
+        user_input = curator.enrich_input(user_input, kg_node)
+    else:
+        print("No knowledge graph node found — proceeding without enrichment")
+
+    print(f"Idea: {user_input.splitlines()[0]}\n")
 
     # ── 1. Planner → Master Content Contract ─────────────
     print("Planning...")
     contract = PlannerAgent().plan(user_input)
+    if kg_node:
+        contract["_kg_node_id"] = kg_node["id"]
     print(f"  Topic:   {contract['topic']}")
     print(f"  Type:    {contract['content_type']}")
     print(f"  Insight: {contract['core_insight']}\n")
@@ -177,6 +191,9 @@ async def main(user_input: str) -> None:
             result = LinkedInPublisher().post(post_text, image_path=image_path)
             update_platform_post_id(post_id, result.platform_post_id)
             print(f"Live: {result.platform_post_id}")
+            if kg_node:
+                curator.mark_posted(kg_node["id"], result.platform_post_id)
+                print(f"Knowledge graph updated: {kg_node['id']} → posted")
         except PublishError as e:
             print(f"LinkedIn failed: {e}")
     else:
@@ -191,10 +208,20 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         user_input = " ".join(sys.argv[1:])
     else:
-        print("What do you want to post about today?")
+        suggestion = KnowledgeCuratorAgent().pick_next()
+        if suggestion:
+            print(f"Suggested next topic: {suggestion['topic']}")
+            print(f"  Layer: {suggestion['layer_name']}  |  Importance: {suggestion['business']['importance']}/5")
+            print(f"  Insight: {suggestion['core_insight']}")
+            print()
+        print("What do you want to post about today? (Enter to use suggestion)")
         user_input = input("> ").strip()
         if not user_input:
-            print("No input.")
-            sys.exit(0)
+            if suggestion:
+                user_input = suggestion["topic"]
+                print(f"Using: {user_input}")
+            else:
+                print("No input and no suggestion available.")
+                sys.exit(0)
 
     asyncio.run(main(user_input))
