@@ -75,39 +75,64 @@ class VisualBlockGenerator:
         takeaways = graph.get("key_takeaways") or []
 
         if block_type == "what":
+            # First point = subtitle (the one-liner), rest = key nodes with detail
+            node_points = [
+                f"{n['label']} — {n['detail']}" if n.get("detail") else n["label"]
+                for n in nodes[:4]
+            ]
             return VisualBlock(
                 title=f"What is {hero.title()}?",
-                points=[subtitle] + [n["label"] for n in nodes[:4]],
+                points=[subtitle] + node_points if subtitle else node_points,
                 **base,
             )
 
         if block_type == "why":
+            # Takeaways first, fall back to node details
+            why_points = (
+                takeaways[:4]
+                or [n["detail"] for n in nodes[:4] if n.get("detail")]
+                or [n["label"] for n in nodes[:4]]
+            )
             return VisualBlock(
                 title=f"Why {hero.title()} matters",
-                points=takeaways[:4] or [n["detail"] for n in nodes[:4]],
+                points=why_points,
                 **base,
             )
 
         if block_type == "inputs":
+            input_nodes = [n for n in nodes if n.get("phase") in self._phase_names(phases, 0)]
+            if not input_nodes:
+                input_nodes = nodes[:3]
             return VisualBlock(
                 title="Inputs",
-                points=[n["label"] for n in nodes if n.get("phase") in
-                        self._phase_names(phases, 0)],
+                points=[
+                    f"{n['label']} — {n['detail']}" if n.get("detail") else n["label"]
+                    for n in input_nodes
+                ],
                 **base,
             ) if nodes else None
 
         if block_type == "outputs":
+            output_nodes = [n for n in nodes if n.get("phase") in self._phase_names(phases, -1)]
+            if not output_nodes:
+                output_nodes = nodes[-3:]
             return VisualBlock(
                 title="Outputs",
-                points=[n["label"] for n in nodes if n.get("phase") in
-                        self._phase_names(phases, -1)],
+                points=[
+                    f"{n['label']} — {n['detail']}" if n.get("detail") else n["label"]
+                    for n in output_nodes
+                ],
                 **base,
             ) if nodes else None
 
         if block_type == "flow":
-            steps = [n["label"] for n in nodes]
-            if not steps:
+            if not nodes:
                 return None
+            # Store as "Label — detail" so the template can split on " — "
+            steps = [
+                f"{n['label']} — {n['detail']}" if n.get("detail") else n["label"]
+                for n in nodes
+            ]
             return VisualBlock(title="How it works", flow=steps, **base)
 
         if block_type == "example":

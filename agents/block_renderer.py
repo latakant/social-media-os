@@ -31,6 +31,8 @@ _BLOCK_TEMPLATE: dict[str, str] = {
 
 _PLATFORM_DIMENSIONS: dict[str, tuple[int, int]] = {
     "linkedin":           (1200, 1200),
+    "linkedin_landscape": (1200, 627),
+    "linkedin_portrait":  (1080, 1350),
     "instagram":          (1080, 1080),
     "instagram_portrait": (1080, 1350),
 }

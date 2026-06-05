@@ -19,8 +19,9 @@ body {
 }
 .content {
   position: relative; z-index: 1;
-  padding: var(--sp-md) var(--sp-xl);
-  display: flex; flex-direction: column; justify-content: center; gap: var(--sp-sm);
+  padding: 28px var(--sp-xl) 0;
+  display: flex; flex-direction: column;
+  gap: 0;
 }
 .title {
   font-size: var(--t-section);
@@ -28,17 +29,36 @@ body {
   background: linear-gradient(135deg, var(--text) 0%, var(--primary) 100%);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   line-height: 1.1;
+  margin-bottom: 20px;
 }
-.points { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+.points {
+  display: flex; flex-direction: column;
+  justify-content: space-around;
+  flex: 1;
+  gap: 0;
+}
 .point {
-  display: flex; align-items: center; gap: 14px;
-  padding: 16px 20px;
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 14px 18px;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-left: 3px solid var(--primary);
   border-radius: var(--card-radius);
 }
-.point-text { font-size: var(--t-item); font-weight: 600; color: var(--text); }
+.point-icon { flex-shrink: 0; margin-top: 3px; opacity: 0.8; }
+.point-body { flex: 1; min-width: 0; }
+.point-label {
+  font-size: var(--t-item);
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.25;
+}
+.point-detail {
+  font-size: var(--t-detail);
+  color: var(--text-subtle);
+  margin-top: 3px;
+  line-height: 1.45;
+}
 .footer {
   position: relative; z-index: 1;
   padding: 0 var(--sp-xl);
@@ -57,17 +77,25 @@ body {
     <div class="tag">{{ topic | upper }}</div>
     <div class="brand">Building in Public &bull; <em>AI Agents</em></div>
   </div>
+
   <div class="content">
     <div class="title">{{ title }}</div>
     <div class="points">
       {% for p in points %}
+      {% set parts = p.split(' — ', 1) %}
       <div class="point">
-        <div>{{ icon(block_icon, 20) }}</div>
-        <div class="point-text">{{ p }}</div>
+        <div class="point-icon">{{ icon(block_icon, 20) }}</div>
+        <div class="point-body">
+          <div class="point-label">{{ parts[0] }}</div>
+          {% if parts | length > 1 %}
+          <div class="point-detail">{{ parts[1] }}</div>
+          {% endif %}
+        </div>
       </div>
       {% endfor %}
     </div>
   </div>
+
   <div class="footer">
     <div class="slide-num">{{ slide_label }}</div>
     <div class="accent-bar"></div>

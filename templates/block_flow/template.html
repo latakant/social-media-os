@@ -43,7 +43,9 @@ body {
   border-radius: 6px; width: 26px; height: 26px;
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
-.step-text { font-size: var(--t-item); font-weight: 700; color: var(--text); }
+.step-body { flex: 1; min-width: 0; }
+.step-text { font-size: var(--t-item); font-weight: 700; color: var(--text); line-height: 1.2; }
+.step-detail { font-size: var(--t-detail); color: var(--text-subtle); margin-top: 3px; line-height: 1.4; }
 .arrow { font-size: 18px; color: var(--arrow); padding: 4px 0 4px 24px; }
 .footer {
   position: relative; z-index: 1;
@@ -64,10 +66,16 @@ body {
     <div class="title">{{ title }}</div>
     <div class="steps">
       {% for step in flow %}
+      {% set parts = step.split(' — ', 1) %}
       <div class="step-row">
         <div class="step">
           <div class="step-num">{{ loop.index }}</div>
-          <div class="step-text">{{ step }}</div>
+          <div class="step-body">
+            <div class="step-text">{{ parts[0] }}</div>
+            {% if parts | length > 1 %}
+            <div class="step-detail">{{ parts[1] }}</div>
+            {% endif %}
+          </div>
         </div>
         {% if not loop.last %}<div class="arrow">↓</div>{% endif %}
       </div>
