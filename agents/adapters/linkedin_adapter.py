@@ -12,13 +12,14 @@ BRAND VOICE:
 CONTENT CONTRACT:
 Topic: {topic}
 Type: {content_type}
+Angle: {angle}
 Core Insight: {core_insight}
 Key Points:
 {key_points}
 CTA: {call_to_action}
-
+{hook_block}
 FORMAT (follow this structure exactly):
-[Hook — one bold statement that challenges a common belief or states the core insight directly]
+[Hook — first line of the post]
 
 [blank line]
 
@@ -29,8 +30,9 @@ FORMAT (follow this structure exactly):
 [Closing: the CTA question, direct and specific]
 
 Rules:
+- If a hook is provided above, use it exactly as the first line — do not paraphrase
+- If no hook is provided, write one: a sharp conclusion or contrast that makes readers stop scrolling
 - Hook must NOT start with "Day", "Today", "I've been", "On day"
-- Hook states a sharp conclusion or contrast — makes reader stop scrolling
 - Name specific things: agent names, tools, patterns — not vague generalities
 - No hashtags. No emojis. No markdown formatting.
 - 150-220 words total
@@ -46,6 +48,8 @@ class LinkedInAdapter:
 
     def adapt(self, contract: dict) -> str:
         key_points_text = "\n".join(f"- {p}" for p in contract.get("key_points", []))
+        hook = contract.get("hook", "")
+        hook_block = f"Opening Hook (use this exact line first):\n{hook}\n" if hook else ""
         suggestion = contract.get("_suggestion")
         suggestion_block = (
             f"\nFEEDBACK FROM HUMAN REVIEWER (incorporate this):\n{suggestion}\n"
@@ -60,9 +64,11 @@ class LinkedInAdapter:
                     brand_voice=self._brand_voice,
                     topic=contract["topic"],
                     content_type=contract["content_type"],
+                    angle=contract.get("angle", "teach_pattern"),
                     core_insight=contract["core_insight"],
                     key_points=key_points_text,
                     call_to_action=contract["call_to_action"],
+                    hook_block=hook_block,
                 ) + suggestion_block,
             }],
         )

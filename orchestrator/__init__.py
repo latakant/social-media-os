@@ -18,7 +18,7 @@ from agents.layout_agent import LayoutAgent
 from agents.infographic import InfographicAgent
 from services.context_engine import ContextEngine
 from services.knowledge_service import KnowledgeService
-from agents.planner import PlannerAgent
+from agents.strategist import StrategistAgent
 from agents.protocols import PlatformAgent
 from agents.review import ReviewAgent
 from bots.telegram_approval import ApprovalBot
@@ -44,9 +44,9 @@ DIV2 = "-" * 52
 class Orchestrator:
 
     def __init__(self) -> None:
-        self._curator   = KnowledgeService()
-        self._planner   = PlannerAgent()
-        self._architect = InformationArchitectAgent()
+        self._curator    = KnowledgeService()
+        self._strategist = StrategistAgent()
+        self._architect  = InformationArchitectAgent()
         self._layout    = LayoutAgent()
         self._infograph = InfographicAgent()
         self._reviewer  = ReviewAgent()
@@ -91,12 +91,14 @@ class Orchestrator:
             print(f"Analyst:   {analytics['top_priority'][:80]}")
         print()
 
-        # ── 1. Plan → Content Contract ──────────────────────────
-        print("Planning...")
-        contract = self._planner.plan(ctx.for_planner())
+        # ── 1. Strategise → Content Contract ────────────────────
+        print("Strategising...")
+        contract = self._strategist.plan(ctx)
         ctx.enrich_contract(contract)
         print(f"  Topic:   {contract['topic']}")
         print(f"  Type:    {contract['content_type']}")
+        print(f"  Angle:   {contract.get('angle', '—')}")
+        print(f"  Hook:    {contract.get('hook', '—')[:80]}")
         print(f"  Insight: {contract['core_insight']}\n")
 
         # ── 2. Information Architecture → Layout → Image ─────────

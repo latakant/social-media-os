@@ -12,13 +12,14 @@ BRAND VOICE:
 CONTENT CONTRACT:
 Topic: {topic}
 Type: {content_type}
+Angle: {angle}
 Core Insight: {core_insight}
 Key Points:
 {key_points}
 CTA: {call_to_action}
-
+{hook_block}
 FORMAT:
-[1-2 sentence hook — the single most important insight, stated directly]
+[Hook — first line of the caption]
 
 [1-2 sentences expanding the most important key point. Specific and technical.]
 
@@ -28,6 +29,8 @@ FORMAT:
 [3-5 hashtags, lowercase, specific to this topic]
 
 Rules:
+- If a hook is provided above, use it exactly as the first line
+- If no hook is provided, write a 1-2 sentence hook: the single most important insight, stated directly
 - Caption body: 40-80 words (before hashtags)
 - No emojis
 - No generic hashtags (#ai, #tech, #coding are too broad)
@@ -47,6 +50,8 @@ class InstagramAdapter:
 
     def adapt(self, contract: dict) -> str:
         key_points_text = "\n".join(f"- {p}" for p in contract.get("key_points", []))
+        hook = contract.get("hook", "")
+        hook_block = f"Opening Hook (use this exact line first):\n{hook}\n" if hook else ""
         suggestion = contract.get("_suggestion")
         suggestion_block = (
             f"\nFEEDBACK FROM HUMAN REVIEWER (incorporate this):\n{suggestion}\n"
@@ -61,9 +66,11 @@ class InstagramAdapter:
                     brand_voice=self._brand_voice,
                     topic=contract["topic"],
                     content_type=contract["content_type"],
+                    angle=contract.get("angle", "teach_pattern"),
                     core_insight=contract["core_insight"],
                     key_points=key_points_text,
                     call_to_action=contract["call_to_action"],
+                    hook_block=hook_block,
                 ) + suggestion_block,
             }],
         )
