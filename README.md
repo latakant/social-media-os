@@ -1,11 +1,12 @@
 # Social Media OS
 
-An agentic content pipeline that converts a topic into platform-ready LinkedIn posts and Instagram captions — with rendered infographic images and a human approval gate — using a layered multi-agent architecture built entirely in Python.
+An agentic system with two workflows: a **content pipeline** that converts a topic into platform-ready LinkedIn posts and Instagram captions with rendered infographic images, and a **LinkedIn profile optimizer** that generates every profile section tailored to a target role. Built on a layered multi-agent architecture in Python.
 
 ---
 
 ## The Problem
 
+### Content Pipeline
 Creating consistent, high-quality technical content for LinkedIn and Instagram requires the same work every time:
 
 1. Decide **what** to post next (from a curriculum of topics)
@@ -19,11 +20,16 @@ Creating consistent, high-quality technical content for LinkedIn and Instagram r
 
 Doing this manually takes 2–3 hours per post. Doing it with generic AI tools produces generic output because each step has no context about brand voice, curriculum position, or past performance.
 
-**This system automates the full pipeline with structured intelligence at every step.**
+### LinkedIn Profile Optimizer
+Updating a LinkedIn profile for a specific role requires writing 5 distinct sections — headline, about, experience bullets, skills order, featured pins — each with different character limits, tone, and strategic intent. Generic rewrites ignore the target role requirements and produce the same output for everyone.
+
+**This system automates both with structured intelligence at every step.**
 
 ---
 
 ## How It Works — End to End
+
+### Workflow 1 — Content Pipeline
 
 ```
 User Input (topic or auto-pick from knowledge graph)
@@ -63,6 +69,30 @@ User Input (topic or auto-pick from knowledge graph)
   KnowledgeService.mark_posted()   ← updates curriculum graph state
 ```
 
+### Workflow 2 — LinkedIn Profile Optimizer
+
+```
+Inputs: resume.md + brand_voice.md + target JD
+        │
+        ▼
+  LinkedInProfileWorkflow
+        │
+        ├── ProfileWriterAgent.generate_headline()   [LLM] ← 220 char limit enforced
+        │
+        ├── ProfileWriterAgent.generate_about()      [LLM] ← 2600 char limit enforced
+        │
+        ├── ProfileWriterAgent.generate_experience() [LLM] ← per role, JD-aligned bullets
+        │
+        ├── ProfileWriterAgent.generate_skills()     [LLM] ← 15 skills ordered by JD relevance
+        │
+        └── ProfileWriterAgent.generate_featured()   [LLM] ← pins ranked by role signal value
+                │
+                ▼
+        linkedin_profile.md   ← copy-paste ready document, one section per heading
+```
+
+Each section is a separate focused LLM call. The prompt for each section includes the full resume, brand voice, and target JD so every section is consistent and role-specific. LinkedIn's character limits are validated in the output document.
+
 ---
 
 ## Architecture — Layer Separation
@@ -74,10 +104,13 @@ The codebase is divided into five distinct layers. Each layer has one responsibi
 | **Agents** | `agents/` | LLM-based decision making — reasoning, extraction, generation |
 | **Services** | `services/` | State, retrieval, and transformation — no side effects on external systems |
 | **Renderers** | `renderers/` | Convert structured data into visual output (PNG, HTML) |
-| **Orchestrator** | `orchestrator/` | Coordinate the workflow — calls agents and services in sequence |
+| **Workflows** | `workflows/` | Multi-step task orchestration — coordinates agents for a complete job |
+| **Orchestrator** | `orchestrator/` | Real-time content pipeline coordination |
 | **Publishers** | `publishers/` | External API clients — LinkedIn, Instagram |
 
-**Rule enforced throughout:** An agent makes decisions. A service stores or retrieves. A renderer produces output. Nothing crosses these boundaries.
+**Rule enforced throughout:** An agent makes decisions. A service stores or retrieves. A renderer produces output. A workflow coordinates agents to complete a multi-step job. Nothing crosses these boundaries.
+
+**Orchestrator vs Workflow:** The `orchestrator/` handles the live, interactive content pipeline (with async execution, Telegram approval loop, and publishing). `workflows/` handles complete offline jobs — like profile generation — that run start to finish and produce a document.
 
 ---
 
@@ -86,8 +119,9 @@ The codebase is divided into five distinct layers. Each layer has one responsibi
 ```
 social-intel/
 │
-├── run.py                          # CLI entry point
-├── run_analyst.py                  # Run AnalyticsService on a platform snapshot
+├── run.py                          # CLI — content pipeline entry point
+├── run_profile.py                  # CLI — LinkedIn profile optimizer entry point
+├── run_analyst.py                  # CLI — run AnalyticsService on a platform snapshot
 ├── test_carousel.py                # Test VisualBlock carousel pipeline (no Telegram)
 ├── test_carousel_telegram.py       # Test carousel pipeline with Telegram approval
 ├── render_rag_carousel.py          # Render a hardcoded 3-slide carousel
@@ -102,6 +136,7 @@ social-intel/
 │   ├── infographic.py              # InfographicAgent — renders HTML → PNG via Playwright
 │   ├── visual_block_generator.py   # VisualBlockGenerator — ContentGraph → Carousel (rule-based)
 │   ├── review.py                   # ReviewAgent — post quality gate (LLM)
+│   ├── profile_writer.py           # ProfileWriterAgent — generates LinkedIn profile sections (LLM)
 │   ├── planner.py                  # PlannerAgent — legacy, replaced by StrategistAgent
 │   ├── post_writer.py              # PostWriterAgent — legacy LinkedIn writer
 │   ├── content.py                  # ContentAgent — legacy sprint agent
@@ -143,6 +178,9 @@ social-intel/
 │
 ├── memory/
 │   └── store.py                    # SQLite helpers — save/read post records and analytics
+│
+├── workflows/
+│   └── linkedin_profile.py         # LinkedInProfileWorkflow — full profile generation job
 │
 ├── normalizers/
 │   └── instagram.py                # Converts raw Instagram export JSON → PlatformSnapshot
@@ -239,6 +277,13 @@ social-intel/
 
 ---
 
+### ProfileWriterAgent — section-scoped prompting
+**Where:** `agents/profile_writer.py`, called by `workflows/linkedin_profile.py`
+
+**Why:** LinkedIn profile sections have fundamentally different requirements — a headline needs 220 chars of maximum signal density, an About section needs 2600 chars of flowing narrative, experience bullets need active verbs and specific tech. One monolithic "rewrite my profile" prompt produces mediocre output across all sections. Instead, `ProfileWriterAgent` uses a separate focused prompt per section, each with its own character limit constraint, tone instruction, and structural rules. Every prompt receives the full resume + brand voice + target JD so the sections are consistent without being aware of each other.
+
+---
+
 ### CSS Design System — `templates/design-system/`
 **Where:** `templates/_base.css`, `templates/design-system/tokens.css`, applied via `StyleService`
 
@@ -260,9 +305,12 @@ One LLM extraction (InformationArchitectAgent) produces a `ContentGraph` — nod
 **Deterministic vs. probabilistic separation**
 Agents that make decisions use LLMs. Agents that transform data use rules. `VisualBlockGenerator` converts a `ContentGraph` into carousel slides with zero LLM calls — it applies deterministic mapping rules (node type → block type). `StyleService` loads a JSON file. `KnowledgeService` runs a scoring function. The LLM budget is spent only where reasoning is actually needed.
 
+**Section-scoped prompts over monolithic rewrites**
+`ProfileWriterAgent` uses one prompt per LinkedIn section instead of one prompt for the whole profile. A headline prompt optimises for 220-char signal density. An About prompt optimises for narrative flow and search keywords. An experience prompt optimises for active verbs and technical specificity. Each section gets the constraints it actually needs — character limits, tone, structure — without those constraints conflicting with other sections in the same prompt.
+
 ---
 
-## Running the Pipeline
+## Running the Pipelines
 
 ```bash
 # Install dependencies
@@ -271,7 +319,11 @@ pip install playwright && playwright install chromium
 
 # Copy and fill environment variables
 cp .env.example .env
+```
 
+### Workflow 1 — Content Pipeline
+
+```bash
 # Auto-pick next topic from knowledge graph
 python run.py
 
@@ -287,6 +339,21 @@ python run_analyst.py --snapshot data/snapshots/june_2026.json --platform linked
 # Test carousel rendering without Telegram
 python test_carousel.py "RAG Pipeline" --style modern_saas
 ```
+
+### Workflow 2 — LinkedIn Profile Optimizer
+
+```bash
+# Generate full optimized LinkedIn profile (uses built-in resume data)
+python run_profile.py
+
+# Pass your own resume markdown file
+python run_profile.py --resume path/to/resume.md
+
+# Custom output path
+python run_profile.py --resume resume.md --output my_linkedin_profile.md
+```
+
+Output: a `linkedin_profile.md` file with every section ready to copy-paste into LinkedIn, character counts validated against LinkedIn limits.
 
 ## Environment Variables
 
