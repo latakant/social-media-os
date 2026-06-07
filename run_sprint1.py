@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 
 from schemas.instagram import InstagramSnapshot
 from normalizers.instagram import InstagramNormalizer
-from agents.analyst import AnalystAgent
+from services.analytics_service import AnalyticsService
 from agents.content import ContentAgent
 from agents.infographic import InfographicAgent
 from agents.review import ReviewAgent
@@ -50,7 +50,7 @@ async def main() -> None:
     print(f"Snapshot:  engagement={snapshot.engagement_rate:.2%} | conversion={snapshot.conversion_rate:.2%}")
 
     print("Analyzing...")
-    report = AnalystAgent().analyze(snapshot)
+    report = AnalyticsService().analyze(snapshot)
     print(f"Priority:  {report.top_priority}\n")
 
     content_agent = ContentAgent()

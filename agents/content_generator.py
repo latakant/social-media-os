@@ -1,6 +1,6 @@
 import json
 from groq import Groq
-from agents.template_registry import schema_as_prompt
+from services.template_registry import schema_as_prompt
 
 
 # Maps content_type → template name

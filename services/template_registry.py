@@ -1,3 +1,8 @@
+"""TemplateRegistry — loads and describes Jinja2 template schemas.
+
+Pure service: reads JSON schema files from templates/ directory.
+"""
+
 import json
 from pathlib import Path
 

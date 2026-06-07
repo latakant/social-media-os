@@ -216,14 +216,14 @@ class InfographicAgent:
 
     def _render(self, template_type: str, data: dict,
                 platform: str = "default", style: str = "linear_dark") -> str:
-        from agents.style_agent import StyleAgent
+        from services.style_service import StyleService
         w, h = _PLATFORM_DIMENSIONS.get(platform, _PLATFORM_DIMENSIONS["default"])
         base_css_url = (self._templates_dir / "_base.css").as_uri()
-        sa = StyleAgent()
+        sa = StyleService()
 
         extra: dict = {}
         if template_type == "architecture_card_v2":
-            from agents.svg_layout import compute_layout
+            from renderers.svg_layout import compute_layout
             positions, phase_labels, col_w, svg_h = compute_layout(
                 data.get("nodes", []),
                 data.get("phases", []),

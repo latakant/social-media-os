@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 
 from schemas.instagram import InstagramSnapshot
 from normalizers.instagram import InstagramNormalizer
-from agents.analyst import AnalystAgent
+from services.analytics_service import AnalyticsService
 
 load_dotenv()
 
@@ -35,7 +35,7 @@ def main() -> None:
     print(f"Normalized: engagement_rate={snapshot.engagement_rate:.2%} · conversion_rate={snapshot.conversion_rate:.2%}")
 
     print("\nAnalyzing with Claude...\n")
-    report = AnalystAgent().analyze(snapshot)
+    report = AnalyticsService().analyze(snapshot)
 
     print(f"TOP PRIORITY\n  {report.top_priority}\n")
 

@@ -13,7 +13,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from agents.analyst import AnalystAgent
+from services.analytics_service import AnalyticsService
 from memory.store import get_latest_analysis, save_analysis_report
 from schemas.platform import PlatformSnapshot
 
@@ -58,7 +58,7 @@ def main() -> None:
 
     snapshot = _load_snapshot(args.snapshot, args.platform)
     print("Running analysis...")
-    report = AnalystAgent().analyze(snapshot)
+    report = AnalyticsService().analyze(snapshot)
 
     print(f"\nTop Priority:\n  {report.top_priority}\n")
 

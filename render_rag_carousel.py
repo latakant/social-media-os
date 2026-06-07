@@ -8,7 +8,7 @@ import concurrent.futures
 from dotenv import load_dotenv
 
 from schemas.visual_block import Carousel, VisualBlock
-from agents.block_renderer import BlockRenderer
+from renderers.block_renderer import BlockRenderer
 from bots.telegram_approval import ApprovalBot
 
 load_dotenv()

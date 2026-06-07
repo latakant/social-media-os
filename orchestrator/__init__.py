@@ -16,7 +16,8 @@ from agents.adapters.linkedin_adapter import LinkedInAdapter
 from agents.information_architect import InformationArchitectAgent
 from agents.layout_agent import LayoutAgent
 from agents.infographic import InfographicAgent
-from agents.knowledge_curator import KnowledgeCuratorAgent
+from services.context_engine import ContextEngine
+from services.knowledge_service import KnowledgeService
 from agents.planner import PlannerAgent
 from agents.protocols import PlatformAgent
 from agents.review import ReviewAgent
@@ -43,7 +44,7 @@ DIV2 = "-" * 52
 class Orchestrator:
 
     def __init__(self) -> None:
-        self._curator   = KnowledgeCuratorAgent()
+        self._curator   = KnowledgeService()
         self._planner   = PlannerAgent()
         self._architect = InformationArchitectAgent()
         self._layout    = LayoutAgent()
@@ -64,36 +65,36 @@ class Orchestrator:
         print("Social Media OS")
         print(f"{DIV}\n")
 
-        # ── 0. Knowledge Curator ────────────────────────────────
+        # ── 0. Assemble context ─────────────────────────────────
+        valid_platforms = [p for p in platforms if p in _ADAPTERS]
+        primary_platform = valid_platforms[0] if valid_platforms else "linkedin"
+
         kg_node = self._curator.find_node(topic) or self._curator.pick_next()
         if kg_node:
             print(f"Knowledge node: [{kg_node['layer_name']}] {kg_node['topic']}")
-            topic = self._curator.enrich_input(topic, kg_node)
 
-        valid_platforms = [p for p in platforms if p in _ADAPTERS]
+        analytics = get_latest_analysis(platform=primary_platform)
+
+        ctx = ContextEngine.build(
+            topic,
+            kg_node=kg_node,
+            analytics=analytics,
+            audience=audience,
+            objective=objective,
+            style=style,
+            platforms=valid_platforms,
+        )
+
         print(f"Idea:      {topic.splitlines()[0]}")
-        print(f"Platforms: {', '.join(valid_platforms)}\n")
-
-        # ── 0b. Analyst findings — inject what worked / what to improve ──
-        primary_platform = valid_platforms[0] if valid_platforms else "linkedin"
-        analyst = get_latest_analysis(platform=primary_platform)
-        if analyst:
-            print(f"Analyst context: {analyst['top_priority'][:80]}")
-            recs = "\n".join(f"- {r}" for r in analyst["recommendations"][:2])
-            topic += (
-                f"\n\n[Analyst Context — based on recent {primary_platform} performance]"
-                f"\nTop priority: {analyst['top_priority']}"
-                f"\nRecent recommendations:\n{recs}"
-            )
-            print()
+        print(f"Platforms: {', '.join(valid_platforms)}")
+        if analytics:
+            print(f"Analyst:   {analytics['top_priority'][:80]}")
+        print()
 
         # ── 1. Plan → Content Contract ──────────────────────────
         print("Planning...")
-        contract = self._planner.plan(topic)
-        contract["_kg_node_id"]  = kg_node["id"] if kg_node else None
-        contract["audience"]     = audience
-        contract["objective"]    = objective
-        contract["platforms"]    = valid_platforms
+        contract = self._planner.plan(ctx.for_planner())
+        ctx.enrich_contract(contract)
         print(f"  Topic:   {contract['topic']}")
         print(f"  Type:    {contract['content_type']}")
         print(f"  Insight: {contract['core_insight']}\n")

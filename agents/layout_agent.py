@@ -7,7 +7,7 @@ Jinja2 is left as a pure renderer — no intelligence in templates.
 
 import json
 from groq import Groq
-from agents.template_registry import load_schema, schema_as_prompt
+from services.template_registry import load_schema, schema_as_prompt
 
 
 _PATTERN_TEMPLATE: dict[str, str] = {

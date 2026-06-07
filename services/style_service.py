@@ -1,7 +1,7 @@
-"""StyleAgent — applies a visual style preset to a ContentGraph.
+"""StyleService — loads and applies visual style presets.
 
-Rule-based, no LLM call. Fast, deterministic, cheap.
-Each style is a JSON preset in styles/ that overrides CSS custom properties.
+Pure service: no LLM calls. Reads JSON presets from styles/ and builds
+CSS variable override strings for the Jinja2 render pipeline.
 """
 
 import json
@@ -22,7 +22,7 @@ def list_styles() -> list[str]:
     return sorted(p.stem for p in _STYLES_DIR.glob("*.json"))
 
 
-class StyleAgent:
+class StyleService:
 
     def css_overrides(self, style: str = _DEFAULT) -> str:
         """Build the :root CSS variable overrides string for this style."""

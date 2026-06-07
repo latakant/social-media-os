@@ -1,3 +1,9 @@
+"""AnalyticsService — analyzes platform metrics and returns structured observations.
+
+Service: takes a snapshot, returns an ObservationReport. No side effects,
+no state. The caller decides what to do with the findings.
+"""
+
 import json
 from datetime import datetime, timezone
 
@@ -42,7 +48,7 @@ Rules:
 - top_priority: one sentence, the single highest-leverage action"""
 
 
-class AnalystAgent:
+class AnalyticsService:
 
     def __init__(self) -> None:
         self._client = Groq()
@@ -65,10 +71,9 @@ class AnalystAgent:
             response_format={"type": "json_object"},
             messages=[
                 {"role": "system", "content": _SYSTEM},
-                {
-                    "role": "user",
-                    "content": _PROMPT.format(snapshot_json=json.dumps(payload, indent=2)),
-                },
+                {"role": "user", "content": _PROMPT.format(
+                    snapshot_json=json.dumps(payload, indent=2)
+                )},
             ],
         )
 

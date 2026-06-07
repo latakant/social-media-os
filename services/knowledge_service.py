@@ -1,8 +1,10 @@
-"""KnowledgeCuratorAgent — picks the next node to post from the knowledge graph.
+"""KnowledgeService — retrieves and traverses the knowledge graph.
 
-Scoring: business.importance DESC, layer ASC (foundations before advanced).
-A node is eligible only when all its prerequisites are already posted.
+Pure service: no LLM calls, no reasoning. Answers queries about the
+curriculum graph (what to post next, prerequisites, related nodes).
 """
+
+from __future__ import annotations
 
 import json
 from datetime import datetime, timezone
@@ -12,7 +14,7 @@ from pathlib import Path
 KG_PATH = Path("knowledge/knowledge_graph.json")
 
 
-class KnowledgeCuratorAgent:
+class KnowledgeService:
 
     def __init__(self) -> None:
         with open(KG_PATH) as f:

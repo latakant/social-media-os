@@ -1,7 +1,7 @@
-"""BlockRenderer — renders a single VisualBlock to a PNG file.
+"""BlockRenderer — renders a single VisualBlock to PNG.
 
+Renderer: Jinja2 template + Playwright. No LLM calls.
 Template selection is a dict lookup (block.type → template folder).
-Block types without their own template fall back to block_what.
 """
 
 from __future__ import annotations
@@ -11,7 +11,7 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 from playwright.sync_api import sync_playwright
 
-from agents.style_agent import StyleAgent
+from services.style_service import StyleService
 from schemas.visual_block import VisualBlock
 
 
@@ -25,8 +25,8 @@ _BLOCK_TEMPLATE: dict[str, str] = {
     "mistakes":   "block_what",
     "flow":       "block_flow",
     "takeaway":   "block_takeaway",
-    "example":    "block_what",   # fallback until block_example is built
-    "comparison": "block_what",   # fallback until block_comparison is built
+    "example":    "block_what",
+    "comparison": "block_what",
 }
 
 _PLATFORM_DIMENSIONS: dict[str, tuple[int, int]] = {
@@ -45,7 +45,7 @@ class BlockRenderer:
         self._env = Environment(loader=FileSystemLoader(str(self._templates_dir)))
         self._output_dir = Path(output_dir)
         self._output_dir.mkdir(parents=True, exist_ok=True)
-        self._style_agent = StyleAgent()
+        self._style_service = StyleService()
 
     def render(
         self,
@@ -54,7 +54,6 @@ class BlockRenderer:
         style: str = "linear_dark",
         total_slides: int = 1,
     ) -> str:
-        """Render one VisualBlock to PNG. Returns the output file path."""
         template_name = _BLOCK_TEMPLATE.get(block.type, "block_what")
         html = self._render_html(block, template_name, platform, style, total_slides)
         return self._screenshot(html, block, platform)
@@ -65,13 +64,12 @@ class BlockRenderer:
         platform: str = "linkedin",
         style: str = "linear_dark",
     ) -> list[str]:
-        """Render all blocks in a carousel. Returns list of PNG paths."""
         return [
             self.render(block, platform=platform, style=style, total_slides=len(blocks))
             for block in blocks
         ]
 
-    # ── Internal ────────────────────────────────────────────────────────
+    # ── Internal ────────────────────────────────────────────────────────────
 
     def _render_html(
         self,
@@ -81,15 +79,15 @@ class BlockRenderer:
         style: str,
         total_slides: int,
     ) -> str:
-        w, h = _PLATFORM_DIMENSIONS.get(platform, (1200, 1200))
+        w, h = _PLATFORM_DIMENSIONS.get(platform, (1080, 1080))
         base_css_url = (self._templates_dir / "_base.css").as_uri()
         template = self._env.get_template(f"{template_name}/template.html")
         slide_label = f"{block.order + 1} / {total_slides}"
         return template.render(
             base_css_url=base_css_url,
             canvas_w=w, canvas_h=h,
-            style_css=self._style_agent.css_overrides(style),
-            body_class=self._style_agent.body_class(style),
+            style_css=self._style_service.css_overrides(style),
+            body_class=self._style_service.body_class(style),
             slide_label=slide_label,
             block_icon=block.icon,
             **self._block_to_dict(block),
@@ -115,7 +113,7 @@ class BlockRenderer:
         }
 
     def _screenshot(self, html: str, block: VisualBlock, platform: str) -> str:
-        w, h = _PLATFORM_DIMENSIONS.get(platform, (1200, 1200))
+        w, h = _PLATFORM_DIMENSIONS.get(platform, (1080, 1080))
         slug = f"block_{block.order:02d}_{block.type}_{int(time.time())}"
         out_path = self._output_dir / f"{slug}.png"
         tmp = self._output_dir / f"_tmp_{slug}.html"

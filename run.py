@@ -11,7 +11,7 @@ import sys
 
 from dotenv import load_dotenv
 
-from agents.knowledge_curator import KnowledgeCuratorAgent
+from services.knowledge_service import KnowledgeService
 from orchestrator import Orchestrator
 
 load_dotenv()
@@ -45,7 +45,7 @@ if __name__ == "__main__":
     topic, platforms, style = _parse_args()
 
     if not topic:
-        suggestion = KnowledgeCuratorAgent().pick_next()
+        suggestion = KnowledgeService().pick_next()
         if suggestion:
             print(f"Suggested next topic: {suggestion['topic']}")
             print(f"  Layer: {suggestion['layer_name']}  |  Importance: {suggestion['business']['importance']}/5")

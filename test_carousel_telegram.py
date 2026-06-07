@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 from agents.planner import PlannerAgent
 from agents.information_architect import InformationArchitectAgent
 from agents.visual_block_generator import VisualBlockGenerator
-from agents.block_renderer import BlockRenderer
+from renderers.block_renderer import BlockRenderer
 from bots.telegram_approval import ApprovalBot
 
 load_dotenv()
